@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include "random_access_iterator.hpp"
 
 namespace ft {
@@ -119,14 +120,36 @@ namespace ft {
 
             /*---------------------------  ELEMENT ACCESS  ------------------------------*/
 
-            // reference operator[] (size_type n){}
-            // const_reference operator[] (size_type n) const{}
-            // reference at (size_type n){}
-            // const_reference at (size_type n) const{}
-            // reference front(){}
-            // const_reference front() const{}
-            // reference back(){}
-            // const_reference back() const{}
+            reference operator[] (size_type n){
+                return _arr[n];
+            }
+            const_reference operator[] (size_type n) const{
+                return _arr[n];
+            }
+            reference at(size_type n){
+                if (n < 0 || n >= _curr_size)
+                    throw std::out_of_range("out of range");
+                else
+                    return (_arr[n]);
+            }
+            const_reference at (size_type n) const{
+                if (n < 0 || n >= _curr_size)
+                    throw std::out_of_range("out of range");
+                else
+                    return (_arr[n]);
+            }
+            reference front(){
+                return _arr[0];
+            }
+            const_reference front() const{
+                return  _arr[0];
+            }
+            reference back(){
+                return _arr[_curr_size - 1];
+            }
+            const_reference back() const{
+                return _arr[_curr_size - 1];
+            }
 
             /*---------------------------------------------------------------------------*/
 

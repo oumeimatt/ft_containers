@@ -1,28 +1,55 @@
 #include "Vector.hpp"
 #include "random_access_iterator.hpp"
+#include <iostream>
 #include <vector>
-// using namespace std;
+using namespace std;
 int main()
 {
-    // {
-      ft::Vector<int> a(4, 2);
-        // ft::Vector<int>::iterator it = a.begin();
-        // ft::Vector<int>::iterator it2 = a.end();
-        // // cout << it[1] << endl;
-        // std::ptrdiff_t k=it - it2;
-        std::cout << a.end() - a.begin() << std::endl;
-        // cout << (a.end() == a.begin()) << endl;
-    //     // cout << (it2 == it) << endl;
-    //     // cout << a.size() << "         " << a.capacity() << endl;
-    // }
-    // // {
-    //     vector<int> a(2, 2);
-    //     // a.push_back(1);
-    //     // a.push_back(2);
-    //     ptrdiff_t k = a.end() - a.begin();
-    //     cout << k << endl;
-    //     // for (vector<int>::iterator it = a.begin(); it != a.end(); it++)
-    //     cout << k << endl;
-    //     // cout << a.size() << "         " << a.capacity() << endl;
-    // }
+    cout << "--------- STL VECTOR ---------" <<endl;
+    {
+        vector<int> a;
+        cout << "is empty :"<< a.empty() << endl;
+        // cout << a.size() << endl;
+        // cout << a.capacity() << endl;
+        for (int i = 0; i < 17; i++)
+            a.push_back(i);
+        // cout << "is empty :"<< a.empty() << endl;
+        cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+        // a.resize(5);
+        // cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+        // cout << a.size() << endl;
+        // cout << a.capacity() << endl;
+        // for (std::vector<int>::iterator it =a.begin(); it != a.end(); it++)
+        //     cout << *it << endl;
+        a.pop_back();
+        cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+        for (std::vector<int>::iterator it =a.begin(); it != a.end(); it++)
+            cout << *it << endl;
+        a.clear();
+        cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+
+    }
+    cout << "--------- MY VECTOR ---------" <<endl;
+    {
+        ft::Vector<int> a;
+    //     cout << "is empty :"<< a.empty() << endl;
+    //     // cout << a.size() << endl;
+    //     // cout << a.capacity() << endl;
+        for (int i = 0; i < 17; i++)
+            a.push_back(i);
+    //     cout << "is empty :"<< a.empty() << endl;
+        cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+        a.pop_back();
+        cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+        for (ft::Vector<int>::iterator it =a.begin(); it != a.end(); it++)
+            cout << *it << endl;
+        a.clear();
+        cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+    //     a.resize(19, 100);
+    //     cout << "size == " << a.size() << " |||| capacity=== " << a.capacity() << endl;
+    //     // cout << a.size() << endl;
+    //     // cout << a.capacity() << endl;
+    //     for (ft::Vector<int>::iterator it =a.begin(); it != a.end(); it++)
+    //         cout << *it <<endl;
+    }
 }

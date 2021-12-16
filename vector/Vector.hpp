@@ -27,8 +27,9 @@ namespace ft {
             explicit Vector (const allocator_type& alloc = allocator_type()): _alloc(alloc), _curr_size(0), _capacity(0){}
             explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _alloc(alloc){
                 _arr = _alloc.allocate(n);
-                for (size_type i= 0; i < n; i++)
-                    _alloc.construct(_arr+i, val);
+                _alloc.construct(_arr, val);
+                for (size_type i = 0; i < n; i++)
+                    _arr[i]= val;
                 _curr_size = n;
                 _capacity = n;
             }
@@ -83,14 +84,36 @@ namespace ft {
             size_type max_size() const{
                 return _alloc.max_size();
             }
-            // void resize (size_type n, value_type val = value_type()){}
+            void resize (size_type n, value_type val = value_type()){
+                if (n > _capacity){
+                    reserve(_capacity * 2);
+                    _capacity *=  2;
+                }
+                if (n > _curr_size){
+                    for (size_t i = _curr_size; i < n; i++){
+                        _arr[i] = val;
+                    }
+                }
+                _curr_size = n;
+            }
             size_type capacity() const{
                 return _capacity;
             }
             bool empty() const{
-                return _curr_size > 0;
+                if (_curr_size == 0)
+                    return(1);
+                return(0);
             }
-            // void reserve (size_type n){}
+            void reserve (size_type n){
+                if (n > _capacity){
+                    T* tmp = _alloc.allocate(n);
+                    for (size_t i = 0; i < _curr_size; i++)
+                        tmp[i] = _arr[i];
+                    _alloc.destroy(_arr);
+                    _alloc.deallocate(_arr, _capacity);
+                    _arr = tmp;
+                }
+            }
 
             /*---------------------------------------------------------------------------*/
 
@@ -112,8 +135,24 @@ namespace ft {
             // template <class InputIterator>
             // void assign (InputIterator first, InputIterator last){}
             // void assign (size_type n, const value_type& val){}
-            // void push_back (const value_type& val){}
-            // void pop_back(){}
+            void push_back (const value_type& val){
+
+                if (_capacity == 0){
+                    _capacity++;
+                    _arr = _alloc.allocate(2);
+                    _alloc.construct(_arr, val);
+                }
+                else if (_curr_size +1 > _capacity){
+                    reserve(_capacity * 2);
+                    _capacity = _curr_size * 2;
+                    
+                }
+                _alloc.construct(_arr+_curr_size, val);
+                _curr_size++;
+            }
+            void pop_back(){
+                _curr_size--;
+            }
             // iterator insert (iterator position, const value_type& val){}
             // void insert (iterator position, size_type n, const value_type& val){}
             // template <class InputIterator>
@@ -121,7 +160,9 @@ namespace ft {
             // iterator erase (iterator position){}
             // iterator erase (iterator first, iterator last){}
             // void swap (Vector& x){}
-            // void clear(){}
+            void clear(){
+                _curr_size = 0;
+            }
 
             /*---------------------------------------------------------------------------*/
 

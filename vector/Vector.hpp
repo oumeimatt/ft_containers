@@ -46,7 +46,7 @@ namespace ft {
 
             /*-----------------------   ASSIGNMENT OPERATOR  ----------------------------*/
 
-            // Vector& operator= (const Vector& x){}
+            // Vector& operator=(const Vector& x){}
 
             /*---------------------------------------------------------------------------*/
 
@@ -157,7 +157,11 @@ namespace ft {
 
             // template <class InputIterator>
             // void assign (InputIterator first, InputIterator last){}
-            // void assign (size_type n, const value_type& val){}
+            void assign (size_type n, const value_type& val){
+                _curr_size = n;
+                for (size_t i = 0; i < n; i++)
+                    _arr[i] = val;
+            }
             void push_back (const value_type& val){
 
                 if (_capacity == 0){
@@ -176,13 +180,43 @@ namespace ft {
             void pop_back(){
                 _curr_size--;
             }
-            // iterator insert (iterator position, const value_type& val){}
-            // void insert (iterator position, size_type n, const value_type& val){}
+            iterator insert (iterator position, const value_type& val){
+                if (_capacity == _curr_size){
+                    _capacity *=2;
+                    reserve(_capacity);
+                }
+                _curr_size++;
+                for (long i =_curr_size; i > position - begin(); i--)
+                    _arr[i] = _arr[i - 1];
+                _arr[position - begin()]=val;
+                return begin();
+            }
+            void insert (iterator position, size_type n, const value_type& val){
+                if (_curr_size + n > _capacity){
+                    _capacity *=2;
+                    if (_curr_size + n > _capacity)
+                        _capacity = _curr_size + n;
+                    reserve(_capacity);
+                }
+                // _curr_size += n;
+                // long j=(position + n) - begin();
+                // for (long i =_curr_size; i >= j; i--){
+                //     std::cout << "<" << i << ">" << "<" << j << ">" << std::endl;
+                //     _arr[i] = _arr[i - n];
+                // }
+                // for (unsigned long i = j; i > j-n ; i--)
+                //     _arr[i] = val;
+
+            }
             // template <class InputIterator>
             // void insert (iterator position, InputIterator first, InputIterator last){}
             // iterator erase (iterator position){}
             // iterator erase (iterator first, iterator last){}
-            // void swap (Vector& x){}
+            void swap (Vector& x){
+                std::swap(_capacity, x._capacity);
+                std::swap(_curr_size, x._curr_size);
+                std::swap(_arr, x._arr);
+            }
             void clear(){
                 _curr_size = 0;
             }

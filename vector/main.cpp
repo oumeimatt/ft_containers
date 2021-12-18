@@ -8,10 +8,10 @@ int main()
     cout << "--------- STL VECTOR ---------" <<endl;
     {
         vector<int> a;
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 16; i++)
             a.push_back(i);
         cout << "size ======= "<< a.size() << " ||||| capacity ===== " << a.capacity() << endl;
-        a.insert(a.begin()+2,3,15);
+        a.insert(a.begin() + 2,3, 777);
         cout << "size ======= "<< a.size() << " ||||| capacity ===== " << a.capacity() << endl;
         // vector<int> b;
         // for (int i = 7; i < 19; i++)
@@ -36,10 +36,10 @@ int main()
     cout << "--------- MY VECTOR ---------" <<endl;
     {
         ft::Vector<int> a;
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 16; i++)
             a.push_back(i);
         cout << "size ======= "<< a.size() << " ||||| capacity ===== " << a.capacity() << endl;
-        a.insert(a.begin()+2,3, 15);
+        a.insert(a.begin()+2,3, 777);
         cout << "size ======= "<< a.size() << " ||||| capacity ===== " << a.capacity() << endl;
         // ft::Vector<int> b;
         // for (int i = 7; i < 19; i++)

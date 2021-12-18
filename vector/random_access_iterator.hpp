@@ -75,12 +75,14 @@ namespace ft {
                 return tmp;}
             
             random_access_iterator operator+(int n){
-                p += n;
-                return *this;}
+                random_access_iterator tmp(*this);
+                tmp.p += n;
+                return tmp;}
             
             random_access_iterator operator-(int n){
-                p -= n;
-                return *this;}
+                random_access_iterator tmp(*this);
+                tmp.p -= n;
+                return tmp;}
             
             reference operator[](int offset){
                 p+= offset;

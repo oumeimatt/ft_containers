@@ -113,6 +113,7 @@ namespace ft {
                     _alloc.destroy(_arr);
                     _alloc.deallocate(_arr, _capacity);
                     _arr = tmp;
+                    _capacity = n;
                 }
             }
 
@@ -169,11 +170,8 @@ namespace ft {
                     _arr = _alloc.allocate(2);
                     _alloc.construct(_arr, val);
                 }
-                else if (_curr_size +1 > _capacity){
+                else if (_curr_size +1 > _capacity)
                     reserve(_capacity * 2);
-                    _capacity = _curr_size * 2;
-                    
-                }
                 _alloc.construct(_arr+_curr_size, val);
                 _curr_size++;
             }
@@ -181,32 +179,32 @@ namespace ft {
                 _curr_size--;
             }
             iterator insert (iterator position, const value_type& val){
+                size_type newCap;
+                long distance = position - begin();
                 if (_capacity == _curr_size){
-                    _capacity *=2;
-                    reserve(_capacity);
+                    newCap = 2 * _capacity;
+                    reserve(newCap);
                 }
-                _curr_size++;
-                for (long i =_curr_size; i > position - begin(); i--)
+                for (long i = _curr_size; i > distance; i--)
                     _arr[i] = _arr[i - 1];
-                _arr[position - begin()]=val;
-                return begin();
+                _arr[distance] = val;
+                _curr_size++;
+                return position;
             }
             void insert (iterator position, size_type n, const value_type& val){
+                size_type newCap;
+                long distance = position - begin();
                 if (_curr_size + n > _capacity){
-                    _capacity *=2;
-                    if (_curr_size + n > _capacity)
-                        _capacity = _curr_size + n;
-                    reserve(_capacity);
+                    newCap = 2 * _capacity;
+                    if (_curr_size + n > newCap)
+                        newCap = _curr_size + n;
+                    reserve(newCap);
                 }
-                // _curr_size += n;
-                // long j=(position + n) - begin();
-                // for (long i =_curr_size; i >= j; i--){
-                //     std::cout << "<" << i << ">" << "<" << j << ">" << std::endl;
-                //     _arr[i] = _arr[i - n];
-                // }
-                // for (unsigned long i = j; i > j-n ; i--)
-                //     _arr[i] = val;
-
+                _curr_size+=n;
+                for (unsigned long i = _curr_size - 1; i > distance + n - 1;i--)
+                    _arr[i] = _arr[i - n];
+                for (long i = distance + n -1; i > distance - 1; i--)
+                    _arr[i] = val;
             }
             // template <class InputIterator>
             // void insert (iterator position, InputIterator first, InputIterator last){}

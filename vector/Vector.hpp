@@ -61,15 +61,19 @@ namespace ft {
             iterator begin(){
                 return iterator(_arr);
             }
+            
             const_iterator begin() const{
                 return iterator(_arr);
             }
+
             iterator end(){
                 return iterator(_arr + _curr_size);
             }
+
             const_iterator end() const{
                 return iterator(_arr + _curr_size);
             }
+
             // reverse_iterator rbegin(){}
             // const_reverse_iterator rbegin() const{}
             // reverse_iterator rend(){}
@@ -82,9 +86,11 @@ namespace ft {
             size_type size() const{
                 return _curr_size;
             }
+
             size_type max_size() const{
                 return _alloc.max_size();
             }
+
             void resize (size_type n, value_type val = value_type()){
                 if (n > _capacity){
                     reserve(_capacity * 2);
@@ -97,14 +103,17 @@ namespace ft {
                 }
                 _curr_size = n;
             }
+
             size_type capacity() const{
                 return _capacity;
             }
+
             bool empty() const{
                 if (_curr_size == 0)
                     return(1);
                 return(0);
             }
+
             void reserve (size_type n){
                 if (n > _capacity){
                     T* tmp = _alloc.allocate(n);
@@ -124,30 +133,37 @@ namespace ft {
             reference operator[] (size_type n){
                 return _arr[n];
             }
+
             const_reference operator[] (size_type n) const{
                 return _arr[n];
             }
+
             reference at(size_type n){
                 if (n < 0 || n >= _curr_size)
                     throw std::out_of_range("out of range");
                 else
                     return (_arr[n]);
             }
+
             const_reference at (size_type n) const{
                 if (n < 0 || n >= _curr_size)
                     throw std::out_of_range("out of range");
                 else
                     return (_arr[n]);
             }
+
             reference front(){
                 return _arr[0];
             }
+
             const_reference front() const{
                 return  _arr[0];
             }
+
             reference back(){
                 return _arr[_curr_size - 1];
             }
+
             const_reference back() const{
                 return _arr[_curr_size - 1];
             }
@@ -163,6 +179,7 @@ namespace ft {
                 for (size_t i = 0; i < n; i++)
                     _arr[i] = val;
             }
+
             void push_back (const value_type& val){
 
                 if (_capacity == 0){
@@ -178,6 +195,7 @@ namespace ft {
             void pop_back(){
                 _curr_size--;
             }
+
             iterator insert (iterator position, const value_type& val){
                 size_type newCap;
                 long distance = position - begin();
@@ -191,6 +209,7 @@ namespace ft {
                 _curr_size++;
                 return position;
             }
+
             void insert (iterator position, size_type n, const value_type& val){
                 size_type newCap;
                 long distance = position - begin();
@@ -208,13 +227,33 @@ namespace ft {
             }
             // template <class InputIterator>
             // void insert (iterator position, InputIterator first, InputIterator last){}
-            // iterator erase (iterator position){}
-            // iterator erase (iterator first, iterator last){}
+            iterator erase (iterator position){
+                unsigned long i = position - begin();
+                if (i < _curr_size){
+                    _curr_size -= 1;
+                    for (; i < _curr_size; i++)
+                        _arr[i] = _arr[i + 1];
+                }
+                return position;
+            }
+
+            iterator erase (iterator first, iterator last){
+                unsigned long i = first - begin();
+                ptrdiff_t n = last - first;
+                if (i < _curr_size){
+                    _curr_size -= n;
+                    for (; i < _curr_size; i++)
+                        _arr[i] = _arr[i + n];
+                }
+                return first;
+            }
+
             void swap (Vector& x){
                 std::swap(_capacity, x._capacity);
                 std::swap(_curr_size, x._curr_size);
                 std::swap(_arr, x._arr);
             }
+
             void clear(){
                 _curr_size = 0;
             }
@@ -257,4 +296,9 @@ namespace ft {
         // bool operator>= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){}
 
         /*---------------------------------------------------------------------------*/
+
+        template <class T, class Alloc>
+        void swap (vector<T,Alloc>& x, vector<T,Alloc>& y){
+            x.swap(y);
+        }
 }

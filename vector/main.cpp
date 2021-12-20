@@ -3,18 +3,25 @@
 #include <iostream>
 #include <vector>
 using namespace std;
+
 int main()
 {
     cout << "--------- STL VECTOR ---------" <<endl;
     {
-        vector<string> a;
-        // for (int i = 0; i < 16; i++)
-        a.push_back("hello");
-        a.push_back("world");
-        a.push_back("oumixa");
-        a.pop_back();
-        // cout << a[3] << "papa" << endl;
-        for (vector<string>::iterator it = a.begin(); it != a.end(); it++)
+        vector<int> a;
+
+
+        // for (int i = 0; i < 15; i++)
+        //     a.push_back(i);
+        // vector<int> k = a;
+
+        a.assign(49, 777);
+        // a.push_back("hello");
+        // a.push_back("world");
+        // a.push_back("oumixa");
+        // a.erase(a.begin()+5);
+        //std::cout<<test.value
+        for (vector<int>::iterator it = a.begin(); it != a.end(); it++)
             cout << *it << endl;
 //         vector<int>::iterator it = a.erase(a.begin(), a.begin()+7);
 //         for ( ; it != a.end(); it++)
@@ -68,16 +75,15 @@ int main()
     // //     // for (ft::Vector<int>::iterator it=b.begin(); it != b.end(); it++)
     // //     //     cout << *it << "   ";
     // //     // cout << endl;
-        ft::Vector<string> a;
+        // myString test(5);
+        // ft::Vector<myString> a(3, test);
+        ft::Vector<int> a;
         // for (int i = 0; i < 16; i++)
         //     a.push_back(i);
-        a.push_back("hello");
-        a.push_back("world");
-        a.push_back("oumixa");
-        // a.clear();
-        a.pop_back();
-         cout << a[2] << "papa" << endl;
-        for (ft::Vector<string>::iterator it = a.begin(); it != a.end(); it++)
+        a.assign(49, 777);
+        // a.erase(a.begin()+5);
+        // a.pop_back();
+        for (ft::Vector<int>::iterator it = a.begin(); it != a.end(); it++)
             cout << *it << endl;
         cout << "size ======= "<< a.size() << " ||||| capacity ===== " << a.capacity() << endl;
     }

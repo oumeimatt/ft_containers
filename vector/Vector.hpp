@@ -38,21 +38,37 @@ namespace ft {
             // Vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :_alloc(alloc){
 
             // }
-            // Vector (const Vector& x){
-
-            // }
+            Vector (const Vector& x){
+                *this = x;
+            }
 
             /*---------------------------------------------------------------------------*/
 
             /*-----------------------   ASSIGNMENT OPERATOR  ----------------------------*/
 
-            // Vector& operator=(const Vector& x){}
+            Vector& operator=(const Vector& x){
+                for (size_type i =0; i < _curr_size; i++)
+                    _alloc.destroy(_arr + i);
+                _alloc.deallocate(_arr , _capacity);
+                _arr = _alloc.allocate(x._capacity);
+                _curr_size = x._curr_size;
+                _capacity = x._capacity;
+                for (size_type i =0; i < _curr_size; i++)
+                    _alloc.construct(_arr+i, x._arr[i]);
+                return *this;
+            }
 
             /*---------------------------------------------------------------------------*/
 
             /*-----------------------------  DESTRUCTOR  --------------------------------*/
 
-            ~Vector(){}
+            ~Vector(){
+               for (size_type i = 0; i <_curr_size; i++)
+                    _alloc.destroy(_arr + i);
+                _alloc.deallocate(_arr, _capacity);
+                _curr_size = 0;
+                _capacity = 0;
+            }
 
             /*---------------------------------------------------------------------------*/
 
@@ -118,7 +134,7 @@ namespace ft {
                 if (n > _capacity){
                     T* tmp = _alloc.allocate(n);
                     for (size_t i = 0; i < _curr_size; i++){
-                        tmp[i] = _arr[i];
+                        _alloc.construct(tmp+i, _arr[i]);
                         _alloc.destroy(_arr+i);
                     }
                     _alloc.deallocate(_arr, _capacity);
@@ -176,9 +192,13 @@ namespace ft {
             // template <class InputIterator>
             // void assign (InputIterator first, InputIterator last){}
             void assign (size_type n, const value_type& val){
+                if (n > _capacity)
+                    reserve(n);
                 _curr_size = n;
-                for (size_t i = 0; i < n; i++)
-                    _arr[i] = val;
+                for (size_t i = 0; i < _curr_size; i++){
+                    _alloc.destroy(_arr + i);
+                    _alloc.construct(_arr + i, val);
+                }
             }
 
             void push_back (const value_type& val){
@@ -194,9 +214,8 @@ namespace ft {
                 _curr_size++;
             }
             void pop_back(){
-                
                 _curr_size--;
-                // _alloc.destroy(_arr+2);
+                _alloc.destroy(_arr+_curr_size);
             }
 
             iterator insert (iterator position, const value_type& val){
@@ -232,6 +251,7 @@ namespace ft {
             // void insert (iterator position, InputIterator first, InputIterator last){}
             iterator erase (iterator position){
                 unsigned long i = position - begin();
+                _alloc.destroy(_arr+i);
                 if (i < _curr_size){
                     _curr_size -= 1;
                     for (; i < _curr_size; i++)
@@ -258,6 +278,8 @@ namespace ft {
             }
 
             void clear(){
+                for (size_type i = 0; i <_curr_size ; i++)
+                    _alloc.destroy(_arr+i);
                 _curr_size = 0;
             }
 

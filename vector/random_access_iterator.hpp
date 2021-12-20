@@ -108,7 +108,7 @@ namespace ft {
     };
     template<typename U>
     typename random_access_iterator<U>::difference_type operator-(const random_access_iterator<U> &lhs ,const random_access_iterator<U> &rhs){
-        return lhs.getP() - rhs.getP();}
+        return lhs.p - rhs.p;}
     
     // template<typename U>
     // random_access_iterator<U> operator+(int n, const typename ft::random_access_iterator<U> &rhs){

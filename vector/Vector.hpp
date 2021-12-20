@@ -25,7 +25,7 @@ namespace ft {
 
             /*-------------------------   CONSTRUCTORS   -----------------------------*/
 
-            explicit Vector (const allocator_type& alloc = allocator_type()): _alloc(alloc), _curr_size(0), _capacity(0){}
+            explicit Vector (const allocator_type& alloc = allocator_type()):_arr(NULL), _alloc(alloc), _curr_size(0), _capacity(0){}
             explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _alloc(alloc){
                 _arr = _alloc.allocate(n);
                 _alloc.construct(_arr, val);
@@ -61,7 +61,7 @@ namespace ft {
             iterator begin(){
                 return iterator(_arr);
             }
-            
+
             const_iterator begin() const{
                 return iterator(_arr);
             }
@@ -117,9 +117,10 @@ namespace ft {
             void reserve (size_type n){
                 if (n > _capacity){
                     T* tmp = _alloc.allocate(n);
-                    for (size_t i = 0; i < _curr_size; i++)
+                    for (size_t i = 0; i < _curr_size; i++){
                         tmp[i] = _arr[i];
-                    _alloc.destroy(_arr);
+                        _alloc.destroy(_arr+i);
+                    }
                     _alloc.deallocate(_arr, _capacity);
                     _arr = tmp;
                     _capacity = n;
@@ -193,7 +194,9 @@ namespace ft {
                 _curr_size++;
             }
             void pop_back(){
+                
                 _curr_size--;
+                // _alloc.destroy(_arr+2);
             }
 
             iterator insert (iterator position, const value_type& val){
@@ -302,3 +305,4 @@ namespace ft {
             x.swap(y);
         }
 }
+

@@ -37,34 +37,56 @@ namespace ft {
                 iterator it = this->c.end() - 1;
                 this->c.erase(it);
             }
-            container_type getC()const{
-                return c;
-            }
+            template <class U, class Cont>
+            friend bool operator==(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs);
+
+            template <class U, class Cont>
+            friend bool operator!=(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs);
+
+            template <class U, class Cont>
+            friend bool operator<(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs);
+
+            template <class U, class Cont>
+            friend bool operator<=(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs);
+
+            template <class U, class Cont>
+            friend bool operator>(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs);
+
+            template <class U, class Cont>
+            friend bool operator>=(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs);
         protected:
             container_type  c;
     };
-    template <class U, class Cont>
-    bool operator==(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs){
-        return (lhs.getC() == rhs.getC());}
+    
+    template <class T, class Container>
+    bool operator==(const Stack<T,Container>& lhs, const Stack<T,Container>& rhs){
+        return (lhs.c == rhs.c);
+    }
 
-    template <class U, class Cont>
-    bool operator!=(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs){
-       return (lhs.getC() != rhs.getC()); }
+    template <class T, class Container>
+    bool operator!=(const Stack<T,Container>& lhs, const Stack<T,Container>& rhs){
+        return (lhs.c != rhs.c);
+    }
 
-    template <class U, class Cont>
-    bool operator<(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs){
-        return (lhs.getC() < rhs.getC());}
 
-    template <class U, class Cont>
-    bool operator<=(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs){
-         return (lhs.getC() <= rhs.getC());}
+    template <class T, class Container>
+    bool operator<(const Stack<T,Container>& lhs, const Stack<T,Container>& rhs){
+        return (lhs.c < rhs.c);
+    }
 
-    template <class U, class Cont>
-    bool operator>(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs){
-        return (lhs.getC() > rhs.getC());}
+    template <class T, class Container>
+    bool operator<=(const Stack<T,Container>& lhs, const Stack<T,Container>& rhs){
+        return (lhs.c <= rhs.c);
+    }
 
-    template <class U, class Cont>
-    bool operator>=(const Stack<U,Cont>& lhs, const Stack<U,Cont>& rhs){
-        return (lhs.getC() >= rhs.getC());}
+    template <class T, class Container>
+    bool operator>(const Stack<T,Container>& lhs, const Stack<T,Container>& rhs){
+        return (lhs.c > rhs.c);
+    }
+
+    template <class T, class Container>
+    bool operator>=(const Stack<T,Container>& lhs, const Stack<T,Container>& rhs){
+        return (lhs.c >= rhs.c);
+    }
 }
 #endif

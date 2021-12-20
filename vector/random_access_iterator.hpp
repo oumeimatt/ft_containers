@@ -42,14 +42,6 @@ namespace ft {
 
             /*---------------------------------------------------------------------------*/
 
-            /*-------------------------------  GETTER   ---------------------------------*/
-
-            pointer getP()const{
-                return p;
-            }
-
-            /*---------------------------------------------------------------------------*/
-
             reference operator*()const{
                 return *p;}
 
@@ -90,6 +82,27 @@ namespace ft {
             operator random_access_iterator<const T>()const{
                 return random_access_iterator<const T>(p);}
             
+            template<typename U>
+            friend typename random_access_iterator<U>::difference_type operator-(const random_access_iterator<U> &lhs ,const random_access_iterator<U> &rhs);
+
+            template <typename U>
+            friend bool operator==(const random_access_iterator<U> & lhs, const random_access_iterator<U> &rhs);
+
+            template <typename U>
+            friend bool operator!=(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs);
+
+            template <typename U>
+            friend bool operator <(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs);
+
+            template <typename U>
+            friend bool operator >(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs);
+
+            template <typename U>
+            friend bool operator <=(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs);
+
+            template <typename U>
+            friend bool operator >=(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs);
+            
         private :
             pointer p;
     };
@@ -106,26 +119,26 @@ namespace ft {
 
     template <typename U>
     bool operator==(const random_access_iterator<U> & lhs, const random_access_iterator<U> &rhs){
-        return (lhs.getP() == rhs.getP());}
+        return lhs.p == rhs.p;}
 
     template <typename U>
     bool operator!=(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs){
-        return (lhs.getP() != rhs.getP());}
+        return lhs.p != rhs.p;}
 
     template <typename U>
     bool operator <(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs){
-        return (lhs.getP() < rhs.getP());}
+        return lhs.p < rhs.p;}
 
     template <typename U>
     bool operator >(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs){
-        return (lhs.getP() > rhs.getP());}
+        return lhs.p > rhs.p;}
 
     template <typename U>
     bool operator <=(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs){
-        return (lhs.getP() <= rhs.getP());}
+        return lhs.p <= rhs.p;}
 
     template <typename U>
     bool operator >=(const random_access_iterator<U> & lhs, const random_access_iterator<U> & rhs){
-        return (lhs.getP() >= rhs.getP());}
+        return lhs.p >= rhs.p;}
 
 }

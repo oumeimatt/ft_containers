@@ -45,7 +45,7 @@ namespace ft {
             reference operator*()const{
                 return *p;}
 
-            reference operator->()const{
+            pointer operator->()const{
                 return (&(*p));}
 
             random_access_iterator & operator++(){
@@ -70,12 +70,16 @@ namespace ft {
                 random_access_iterator tmp(*this);
                 tmp.p += n;
                 return tmp;}
-            
+            random_access_iterator operator+=(int n){
+                return operator+(n);
+            }
             random_access_iterator operator-(int n){
                 random_access_iterator tmp(*this);
                 tmp.p -= n;
                 return tmp;}
-            
+            random_access_iterator operator-=(int n){
+                return operator-(n);
+            }
             reference operator[](int offset){
                 p+= offset;
                 return *p;}

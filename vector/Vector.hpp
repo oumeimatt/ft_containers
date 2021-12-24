@@ -26,7 +26,7 @@ namespace ft {
             /*-------------------------   CONSTRUCTORS   -----------------------------*/
 
             explicit Vector (const allocator_type& alloc = allocator_type()):_arr(NULL), _alloc(alloc), _curr_size(0), _capacity(0){}
-            explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _alloc(alloc){
+            explicit Vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) : _alloc(alloc), _arr(NULL), _curr_size(0), _capacity(0){
                 _arr = _alloc.allocate(n);
                 for (size_type i = 0; i < n; i++)
                     _alloc.construct(_arr + i, val);
@@ -34,15 +34,15 @@ namespace ft {
             }
 
             template <class InputIterator>
-            Vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :_alloc(alloc){
+            Vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()) :_alloc(alloc), _arr(NULL), _curr_size(0), _capacity(0){
                 size_type diff = last - first;
-                _curr_size = _capacity = diff;
                 _arr = _alloc.allocate(diff);
                 size_type i = 0;
                 for (typename ft::Vector<T>::iterator it = first; it != last; it++){
                     _alloc.construct(_arr + i, *it);
                     i++;
                 }
+                _curr_size = _capacity = diff;
             }
 
             Vector (const Vector& x){
@@ -60,7 +60,7 @@ namespace ft {
                 _alloc.deallocate(_arr , _capacity);
                 _arr = _alloc.allocate(x._capacity);
                 _curr_size = x._curr_size;
-                _capacity = x._capacity;
+                _capacity = x._curr_size;
                 for (size_type i =0; i < _curr_size; i++)
                     _alloc.construct(_arr+i, x._arr[i]);
                 return *this;
@@ -224,7 +224,6 @@ namespace ft {
             }
 
             void push_back (const value_type& val){
-
                 if (_capacity == 0){
                     _capacity++;
                     _arr = _alloc.allocate(2);
@@ -253,7 +252,7 @@ namespace ft {
 
             void insert (iterator position, size_type n, const value_type& val){
                 size_type newCap;
-                long distance = position - begin();
+                long pos = position - begin();
                 if (_curr_size + n > _capacity){
                     newCap = 2 * _capacity;
                     if (_curr_size + n > newCap)
@@ -261,13 +260,33 @@ namespace ft {
                     reserve(newCap);
                 }
                 _curr_size+=n;
-                for (unsigned long i = _curr_size - 1; i > distance + n - 1;i--)
+                for (unsigned long i = _curr_size - 1; i > pos + n - 1;i--)
                     _arr[i] = _arr[i - n];
-                for (long i = distance + n -1; i > distance - 1; i--)
+                for (long i = pos + n -1; i > pos - 1; i--)
                     _arr[i] = val;
             }
-            // template <class InputIterator>
-            // void insert (iterator position, InputIterator first, InputIterator last){}
+
+            template <class InputIterator>
+            void insert (iterator position, InputIterator first, InputIterator last){
+                size_type diff = last - first;
+                size_type pos = position - begin();
+                
+                if (_curr_size + diff > _capacity){
+                    if (_curr_size + diff > _capacity * 2)
+                        reserve(_curr_size + diff);
+                    else
+                        reserve(_capacity * 2);
+                }
+                _curr_size += diff;
+                for (size_type i = _curr_size - 1; i > pos + diff - 1; i--){
+                    
+                    _arr[i] = _arr[i - diff];
+                    std::cout << _arr[i] << std::endl;
+                }
+                for (size_type i = pos + diff - 1; i > pos -1; i--){
+                    _arr[i] = *(last - i -1);
+                }
+            }
             iterator erase (iterator position){
                 unsigned long i = position - begin();
                 if (i < _curr_size){

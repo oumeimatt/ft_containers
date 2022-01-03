@@ -270,7 +270,10 @@ namespace ft {
             void insert (iterator position, InputIterator first, InputIterator last){
                 size_type diff = last - first;
                 size_type pos = position - begin();
-                
+                T *tmp = _alloc.allocate(diff);
+                for (size_type i = 0; i < diff; i++){
+                    _alloc.construct(tmp + i, *(first + i));
+                }
                 if (_curr_size + diff > _capacity){
                     if (_curr_size + diff > _capacity * 2)
                         reserve(_curr_size + diff);
@@ -278,15 +281,15 @@ namespace ft {
                         reserve(_capacity * 2);
                 }
                 _curr_size += diff;
-                for (size_type i = _curr_size - 1; i > pos + diff - 1; i--){
-                    
+                for (size_type i = _curr_size - 1; i > pos + diff - 1; i--)
                     _arr[i] = _arr[i - diff];
-                    std::cout << _arr[i] << std::endl;
-                }
+                int j = 0;
                 for (size_type i = pos + diff - 1; i > pos -1; i--){
-                    _arr[i] = *(last - i -1);
+                    _arr[i] = *(tmp + diff - 1 - j);
+                    j++;
                 }
             }
+
             iterator erase (iterator position){
                 unsigned long i = position - begin();
                 if (i < _curr_size){

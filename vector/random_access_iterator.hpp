@@ -43,52 +43,76 @@ namespace ft {
             /*---------------------------------------------------------------------------*/
 
             reference operator*()const{
-                return *p;}
+                return *p;
+            }
 
             pointer operator->()const{
-                return (&(*p));}
+                return (&(*p));
+            }
 
             random_access_iterator & operator++(){
                 p++;
-                return *this;}
+                return *this;
+            }
 
             random_access_iterator  operator++(int){
                 random_access_iterator tmp(*this);
                 ++(*this);
-                return tmp;} 
+                return tmp;
+            } 
 
             random_access_iterator & operator--(){ 
                 p--;
-                return *this;}
+                return *this;
+            }
             
             random_access_iterator  operator--(int){ 
                 random_access_iterator tmp(*this);
                 --(*this);
-                return tmp;}
+                return tmp;
+            }
             
             random_access_iterator operator+(int n){
                 random_access_iterator tmp(*this);
                 tmp.p += n;
-                return tmp;}
-            random_access_iterator operator+=(int n){
-                return operator+(n);
+                return tmp;
             }
+
+            random_access_iterator & operator+=(int n){
+                difference_type m = n;
+                if (m >= 0){
+                    while (m--)
+                        ++p;
+                }
+                else {
+                    while (m++)
+                        --p;
+                }
+                return (*this);
+            }
+
             random_access_iterator operator-(int n){
                 random_access_iterator tmp(*this);
                 tmp.p -= n;
-                return tmp;}
-            random_access_iterator operator-=(int n){
-                return operator-(n);
+                return tmp;
             }
+
+            random_access_iterator  & operator-=(int n){
+                return operator+=(-n);
+            }
+
             reference operator[](int offset){
-                p+= offset;
-                return *p;}
+                return *(p + offset);
+            }
+
             operator random_access_iterator<const T>()const{
                 return random_access_iterator<const T>(p);}
             
             template<typename U>
             friend typename random_access_iterator<U>::difference_type operator-(const random_access_iterator<U> &lhs ,const random_access_iterator<U> &rhs);
 
+            template<typename U>
+            friend random_access_iterator<U> operator+(int n, const random_access_iterator<U> &rhs);
             template <typename U>
             friend bool operator==(const random_access_iterator<U> & lhs, const random_access_iterator<U> &rhs);
 
@@ -114,11 +138,12 @@ namespace ft {
     typename random_access_iterator<U>::difference_type operator-(const random_access_iterator<U> &lhs ,const random_access_iterator<U> &rhs){
         return lhs.p - rhs.p;}
     
-    // template<typename U>
-    // random_access_iterator<U> operator+(int n, const typename ft::random_access_iterator<U> &rhs){
-    //     return rhs+n;
-    // }
-
+    template<typename U>
+    random_access_iterator<U> operator+(int n, const typename ft::random_access_iterator<U> &rhs){
+        random_access_iterator<U> tmp(rhs);
+        tmp.p += n;
+        return tmp;
+    }
 
 
     template <typename U>

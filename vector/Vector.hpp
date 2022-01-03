@@ -209,10 +209,17 @@ namespace ft {
 
             /*-----------------------------   MODIFIERS  --------------------------------*/
 
-            // template <class InputIterator>
-            // void assign (InputIterator first, InputIterator last){
-
-            // }
+            template <class InputIterator>
+            void assign (InputIterator first, InputIterator last){
+                size_type diff = last - first;
+                if (diff > _capacity)
+                    reserve(diff);
+                for (size_type i = 0; i < _curr_size; i++)
+                    _alloc.destroy(_arr + i);
+                _curr_size = diff;
+                for (size_type i = 0; i < diff; i++)
+                    _alloc.construct(_arr + i, *(first + i));
+            }
             void assign (size_type n, const value_type& val){
                 if (n > _capacity)
                     reserve(n);
@@ -348,25 +355,46 @@ namespace ft {
             size_type _capacity;
 
         };
+        
         /*--------------------   NON-MEMBER FUNCTION OVERLOADS -----------------------*/
 
-        // template <class T, class Alloc>
-        // bool operator== (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){}
+        template <class T, class Alloc>
+        bool operator== (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+            if (lhs.size() != rhs.size())
+                return(false);
+            else
+                return (equal(lhs.begin(), lhs.end(), rhs.begin()));
+        }
 
-        // template <class T, class Alloc>
-        // bool operator!= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){}
+        template <class T, class Alloc>
+        bool operator!= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+            return (!(operator==(lhs, rhs)));
+        }
 
-        // template <class T, class Alloc>
-        // bool operator<  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){}
+        template <class T, class Alloc>
+        bool operator< (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+            if (lhs.size() < rhs.size())
+                return (true);
+            else
+                return(lexicographical_compare(lhs.begin(),lhs.end(), rhs.begin(), rhs.end()));
+        }
 
-        // template <class T, class Alloc>
-        // bool operator<= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){}
+        template <class T, class Alloc>
+        bool operator<= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+            if (equal(lhs.begin(), lhs.end(), rhs.begin()))
+                return (true);
+            return(lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+        }
 	
-        // template <class T, class Alloc>
-        // bool operator>  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){}
+        template <class T, class Alloc>
+        bool operator> (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+            return (!operator<=(lhs, rhs));
+        }
 
-        // template <class T, class Alloc>
-        // bool operator>= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){}
+        template <class T, class Alloc>
+        bool operator>= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+            return (!(operator<(lhs, rhs)));
+        }
 
         /*---------------------------------------------------------------------------*/
 

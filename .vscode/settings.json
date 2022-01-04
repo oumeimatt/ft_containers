@@ -68,6 +68,9 @@
         "iomanip": "cpp",
         "map": "cpp",
         "random": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "csignal": "cpp",
+        "fstream": "cpp",
+        "*.ipp": "cpp"
     }
 }

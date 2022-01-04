@@ -45,10 +45,9 @@ namespace ft {
                 for(; i < _curr_size; i++){
                     _alloc.construct(_arr + i, *(first + i));
                 }
-                
             }
 
-            Vector (const Vector& x){
+            Vector (const Vector& x): _arr(NULL), _curr_size(0), _capacity(0){
                 *this = x;
             }
 
@@ -57,10 +56,10 @@ namespace ft {
             /*-----------------------   ASSIGNMENT OPERATOR  ----------------------------*/
 
             Vector& operator=(const Vector& x){
-                // 
                 for (size_type i =0; i < _curr_size; i++)
                     _alloc.destroy(_arr + i);
-                _alloc.deallocate(_arr , _capacity);
+                if (_capacity > 0)
+                    _alloc.deallocate(_arr , _capacity);
                 _arr = _alloc.allocate(x._capacity);
                 _curr_size = x._curr_size;
                 _capacity = x._curr_size;
@@ -234,16 +233,14 @@ namespace ft {
             }
 
             void push_back (const value_type& val){
-                if (_capacity == 0){
-                    _capacity++;
-                    _arr = _alloc.allocate(1);
-                    _alloc.construct(_arr, val);
-                }
+                if (_capacity == 0)
+                    reserve(1);
                 else if (_curr_size +1 > _capacity)
                     reserve(_capacity * 2);
                 _alloc.construct(_arr + _curr_size, val);
                 _curr_size++;
             }
+
             void pop_back(){
                 _curr_size--;
                 _alloc.destroy(_arr + _curr_size);
@@ -288,6 +285,8 @@ namespace ft {
                     _alloc.allocate(diff);
                     Vector<T> tempVect(first, last);
                     tempVect.swap(*this);
+                    tempVect.clear();
+                    _alloc.deallocate(tempVect._arr , tempVect._capacity);
                 }
                 else{
                     T *tmp = _alloc.allocate(diff);
@@ -304,10 +303,12 @@ namespace ft {
                     for (size_type i = _curr_size - 1; i > pos + diff - 1; i--)
                         _arr[i] = _arr[i - diff];
                     int j = 0;
-                    for (size_type i = pos + diff - 1; i > pos -1; i--){
+                    for (int i = pos + diff - 1; i > (int)(pos -1); i--){
                         _arr[i] = *(tmp + diff - 1 - j);
+                        _alloc.destroy(tmp + diff - 1 - j);
                         j++;
                     }
+                    _alloc.deallocate(tmp, _capacity);
                 }
             }
 
@@ -344,10 +345,11 @@ namespace ft {
                 std::swap(_alloc, x._alloc);
                 std::swap(_capacity, x._capacity);
                 std::swap(_curr_size, x._curr_size);
-                T* tmp;
-                tmp = _arr;
-                _arr = x._arr;
-                x._arr = tmp;
+                std::swap(_arr, x._arr);
+            //     T* tmp;
+            //     tmp = _arr;
+            //     _arr = x._arr;
+            //     x._arr = tmp;
             }
 
             void clear(){
@@ -361,8 +363,7 @@ namespace ft {
             /*-----------------------------   ALLOCATOR  --------------------------------*/
 
             allocator_type get_allocator() const{
-                allocator_type tmp(_alloc);
-                return tmp;
+                return _alloc;
             }
 
             /*---------------------------------------------------------------------------*/

@@ -282,13 +282,12 @@ namespace ft {
                 size_type diff = last - first;
                 size_type pos = position - begin();
                 if (_curr_size == 0){
-                    _alloc.allocate(diff);
-                    Vector<T> tempVect(first, last);
-                    tempVect.swap(*this);
-                    tempVect.clear();
-                    _alloc.deallocate(tempVect._arr , tempVect._capacity);
+                    _arr = _alloc.allocate(diff);
+                    for (size_type i = 0;i < diff; i++)
+                        _arr[i] = *(first + i);
+                    _capacity = _curr_size = diff;
                 }
-                else{
+                else {
                     T *tmp = _alloc.allocate(diff);
                     for (size_type i = 0; i < diff; i++){
                         _alloc.construct(tmp + i, *(first + i));

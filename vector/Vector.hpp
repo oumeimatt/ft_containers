@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include "random_access_iterator.hpp"
 #include "../tools/compare.hpp"
-// #include "../tools/enable_if.hpp"
+#include "../tools/enable_if.hpp"
 #include "../tools/isIntegral.hpp"
 
 namespace ft {
@@ -42,7 +42,6 @@ namespace ft {
                 _arr = _alloc.allocate(diff);
                 size_type i = 0;
                 _curr_size = _capacity = diff;
-                // for (typename ft::Vector<T>::iterator it = first; it != last; it++){
                 for(; i < _curr_size; i++){
                     _alloc.construct(_arr + i, *(first + i));
                 }
@@ -342,10 +341,13 @@ namespace ft {
             }
 
             void swap (Vector& x){
+                std::swap(_alloc, x._alloc);
                 std::swap(_capacity, x._capacity);
                 std::swap(_curr_size, x._curr_size);
-                std::swap(_arr, x._arr);
-                std::swap(_alloc, x._alloc);
+                T* tmp;
+                tmp = _arr;
+                _arr = x._arr;
+                x._arr = tmp;
             }
 
             void clear(){
@@ -413,7 +415,7 @@ namespace ft {
         /*---------------------------------------------------------------------------*/
 
         template <class T, class Alloc>
-        void swap (vector<T,Alloc>& x, vector<T,Alloc>& y){
+        void swap (Vector<T,Alloc>& x, Vector<T,Alloc>& y){
             x.swap(y);
         }
 }

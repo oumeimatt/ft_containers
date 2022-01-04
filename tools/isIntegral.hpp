@@ -2,10 +2,8 @@
 
 #include <type_traits>
 namespace ft {
-    template<bool Cond, class T = void> struct enable_if{};
-    template<class T> struct enable_if<true, T> { typedef T type; };
 
-    template<class T> struct is_integral{ static const bool value = false; };
+    template<class T> struct is_integral { static const bool value = false; };
     template<> struct is_integral<bool> { static const bool value = true; };
     template<> struct is_integral<char> { static const bool value = true; };
     template<> struct is_integral<char16_t> { static const bool value = true; };

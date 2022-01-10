@@ -71,6 +71,9 @@
         "set": "cpp",
         "csignal": "cpp",
         "fstream": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "*.tcc": "cpp",
+        "clocale": "cpp",
+        "memory_resource": "cpp"
     }
 }

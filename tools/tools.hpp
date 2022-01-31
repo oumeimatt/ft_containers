@@ -24,7 +24,7 @@ namespace ft {
     template<> struct is_integral<unsigned long int> { static const bool value = true; };
     template<> struct is_integral<unsigned long long int> { static const bool value = true; };
 
-        template<class InputIt1, class InputIt2>
+    template<class InputIt1, class InputIt2>
     bool equal(InputIt1 first1, InputIt1 last1, InputIt2 first2)
     {
         for (; first1 != last1; ++first1, ++first2) {

@@ -4,9 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include "random_access_iterator.hpp"
-#include "../tools/compare.hpp"
-#include "../tools/enable_if.hpp"
-#include "../tools/isIntegral.hpp"
+#include "../tools/tools.hpp"
 
 namespace ft {
 
@@ -345,10 +343,6 @@ namespace ft {
                 std::swap(_capacity, x._capacity);
                 std::swap(_curr_size, x._curr_size);
                 std::swap(_arr, x._arr);
-            //     T* tmp;
-            //     tmp = _arr;
-            //     _arr = x._arr;
-            //     x._arr = tmp;
             }
 
             void clear(){

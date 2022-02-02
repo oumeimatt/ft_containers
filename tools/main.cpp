@@ -3,24 +3,24 @@
 #include<sstream>
 #include<algorithm>
 #include "avl.hpp"
+#include "tools.hpp"
 
-#define pow2(n) (1 << (n))
+// #define pow2(n) (1 << (n))
 using namespace std;
 int main() {
-//    int c, i;
-   ft::AVLtree<int> avl;
+   ft::AVLtree<ft::pair<int, int> > avl;
+   ft::pair<int, int> a(1, 100);
+   ft::pair<int, int> b(2, 200);
+   ft::pair<int, int> c(3, 300);
+   avl.insert(a);
+   avl.insert(b);
+   avl.insert(c);
 
-    avl.insert(2);
-    avl.insert(3);
-    avl.insert(1);
-    avl.insert(33);
-    avl.insert(4);
-    avl.insert(22);
-    avl.insert(99);
-    avl.postorder();
+
 
     avl.tree_debug();
-    cout << endl;
+   // avl.print_tree();
+
 
    return 0;
 }

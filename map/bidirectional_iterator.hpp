@@ -13,6 +13,9 @@ namespace ft {
             typedef T& reference;
             bidirectional_iterator( void ){}
             bidirectional_iterator(const bidirectional_iterator<T> & src){}
+            bidirectional_iterator &operator=(const bidirectional_iterator<T> & rhs){}
+            reference operator*()const{}
+            
             
 
     };

@@ -11,6 +11,7 @@ namespace ft{
         T _value;
         int _height;
         Node<T> *_left, *_right;
+        bool isThreaded;
         Node(T value) : _value(value){}
         Node getLeft(){
             return _left;
@@ -31,6 +32,24 @@ namespace ft{
             std::allocator<T> _alloc2;
             int _nodeCount;
             Compare _compare;
+
+            Node<T> *createThreaded(Node<T> *root){
+                if (root == NULL)
+                    return (NULL);
+                if (root->_right == NULL && root->_left == NULL)
+                    return (root);
+                //find predecessor if exist 
+                if (root->_left != NULL){
+                    Node<T> *l = createThreaded(root->_left);
+                    l->_right = root;
+                    l->isThreaded = true;
+                }
+                if (root->_right == NULL)
+                    return (root);
+                return(createThreaded(root->_right));
+            }
+
+
             bool contains(Node<T> *node, Key key){
                 if (node == NULL)
                     return false;
@@ -119,7 +138,8 @@ namespace ft{
                     root = _alloc.allocate(1);
                     // root->_value = _alloc2.allocate(1);
                     _alloc2.construct(&root->_value, val);
-                    root->_right = root->_left = NULL;
+                    root->_right = NULL;
+                    root->_left = NULL;
                     root->_bf = root->_height = 0;
                     return root;
                 }
@@ -131,7 +151,42 @@ namespace ft{
                 //update balance factor and height values
                 update(node);
                 // re-balance tree
-                return balance(node);
+                return (balance(node));
+                // node =  balance(node);
+                // createThreaded(node);
+                // return (node);
+            }
+            void inorder(Node<T> *root){
+                if (root == NULL)
+                    return;
+                // Node<T> *curr = leftMost(root);
+                // while(curr != NULL){
+                    if (root->isThreaded)
+                        root = root->_right;
+                    else
+                        root = leftMost(root->_right);
+                    std::cout << root->_value.first << "     ";
+                // }
+            }
+
+            //  void inorder2(Node<T> *t){
+            //     if (t == NULL)
+            //         return ;
+            //     inorder2(t->_left);
+            //     std::cout << t->_value.first << " ";
+            //     inorder2(t->_right);
+            // }
+
+            Node<T> *leftMost(Node<T> *root){
+                while (root != NULL && root->_left != NULL)
+                    root = root->_left;
+                return root;
+            }
+
+            Node<T> *rightMost(Node<T> *root){
+                while (root != NULL && root->_right != NULL)
+                    root = root->_right;
+                return root;
             }
 
 
@@ -165,6 +220,13 @@ namespace ft{
                 return false;
             }
 
+            T min(){
+                return leftMost(_root)->_value;
+            }
+            
+            T max(){
+                return rightMost(_root)->_value;
+            }
 
             void	tree_debug(const std::string &prefix,
                     const Node<T>* node, bool isLeft){
@@ -186,6 +248,12 @@ namespace ft{
                 std::cout << std::endl;
                 tree_debug("$", _root, false);
             }
-            
+            void inorder(){
+                createThreaded(_root);
+                inorder(leftMost(_root));
+            }
+            // void inorder2(){
+            //     inorder2(_root);
+            // }
     };
 }

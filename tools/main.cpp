@@ -37,6 +37,7 @@ int main() {
    // std::cout << avl.min().first << std::endl;
    // std::cout << avl.max().first << std::endl;
    avl.inorder();
+   avl.inorder2();
 
    // avl.print_tree();
 

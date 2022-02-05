@@ -13,13 +13,15 @@ namespace ft{
         Node<T> *_left, *_right;
         bool isThreaded;
         Node(T value) : _value(value){}
-        Node getLeft(){
-            return _left;
-        }
-        Node getRight(){
-            return _right;
-        }
     };
+
+    template<typename T>
+    bool operator!=(const Node<T> &lhs, const Node<T> &rhs){
+        if (lhs._bf == rhs._bf || lhs._height == rhs._bf || lhs.isThreaded == rhs._bf ||
+            lhs._value == rhs._value)
+            return false;
+        return true;
+    }
     template<class T, class Compare = std::less<typename T::first_type> >
     class AVLtree
     {
@@ -152,30 +154,16 @@ namespace ft{
                 update(node);
                 // re-balance tree
                 return (balance(node));
-                // node =  balance(node);
-                // createThreaded(node);
-                // return (node);
-            }
-            void inorder(Node<T> *root){
-                if (root == NULL)
-                    return;
-                // Node<T> *curr = leftMost(root);
-                // while(curr != NULL){
-                    if (root->isThreaded)
-                        root = root->_right;
-                    else
-                        root = leftMost(root->_right);
-                    std::cout << root->_value.first << "     ";
-                // }
             }
 
-            //  void inorder2(Node<T> *t){
-            //     if (t == NULL)
-            //         return ;
-            //     inorder2(t->_left);
-            //     std::cout << t->_value.first << " ";
-            //     inorder2(t->_right);
-            // }
+
+             void inorder2(Node<T> *t){
+                if (t == NULL)
+                    return ;
+                inorder2(t->_left);
+                std::cout << t->_value.first << " ";
+                inorder2(t->_right);
+            }
 
             Node<T> *leftMost(Node<T> *root){
                 while (root != NULL && root->_left != NULL)
@@ -192,7 +180,11 @@ namespace ft{
 
         public:
             AVLtree(): _root(NULL), _nodeCount(0){}
+            
             ~AVLtree(){}
+            Node<T> * getRoot()const{
+                return _root;
+            }
             int height(){
                 if (_root == NULL)
                     return (0);
@@ -224,6 +216,15 @@ namespace ft{
                 return leftMost(_root)->_value;
             }
             
+            Node<T> *minNode(){
+                
+                return leftMost(_root);
+            }
+
+            Node<T> *maxNode(){
+                return rightMost(_root);
+            }
+
             T max(){
                 return rightMost(_root)->_value;
             }
@@ -244,16 +245,26 @@ namespace ft{
                             node->_right, false);
                 }
             }
+
             void	tree_debug(void){
                 std::cout << std::endl;
                 tree_debug("$", _root, false);
             }
-            void inorder(){
-                createThreaded(_root);
-                inorder(leftMost(_root));
+            Node<T>* inorder(Node<T> *root){
+                root = createThreaded(root);
+                if (root == NULL)
+                    return NULL;
+                if (root->isThreaded){
+                    root = root->_right;
+                }
+                else{
+                    root = leftMost(root->_right);
+                    // std::cout << "lala" << std::endl;
+                }
+                return root;
             }
-            // void inorder2(){
-            //     inorder2(_root);
-            // }
+            void inorder2(){
+                inorder2(_root);
+            }
     };
 }

@@ -80,13 +80,13 @@ namespace ft {
         pair():first(), second(){}
 
         template<class U, class V>
-        pair (const pair<U,V>& pr){
+        pair (const pair<U,V>& pr):first(), second(){
             *this = pr;
         }
 
         pair (const first_type& a, const second_type& b): first(a), second(b){}
 
-        pair& operator= (const pair& pr){
+        pair& operator=(const pair& pr){
             first = pr.first;
             second = pr.second;
             return *this;

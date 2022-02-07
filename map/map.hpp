@@ -63,8 +63,7 @@ namespace ft {
                 return(iterator(root, &_avltree));
             }
             iterator end(){
-                node *root = _avltree.maxNode();
-                return(iterator(root, &_avltree));
+                return(iterator(NULL, &_avltree));
             }
             const_iterator end() const{
                 node *root = _avltree.maxNode();

@@ -40,9 +40,35 @@ namespace ft {
             }
 
             bidirectional_iterator &operator++(){
-                // _avltree->inorder(_node);
-                _node = _avltree->inorder(_node);
-                
+
+
+                if (_node->_right != NULL){
+
+                    //successor is the farthest left node of right subtree
+                    Node *l = _node->_right;
+                    while(l->_left != NULL)
+                        l = l->_left;
+                }
+                else{
+                    // have already processed the left subtree, and
+                    // there is no right subtree. move up the tree,
+                    // looking for a parent for which nodePtr is a left child,
+                    // stopping if the parent becomes NULL. a non-NULL parent
+                    // is the successor. if parent is NULL, the original node
+                    // was the last node inorder, and its successor
+                    // is the end of the list
+                    Node *p = _node->_parent;
+                    while(p != NULL && _node == p->_right){
+                        _node = p;
+                        p = p->_parent;
+                    }
+                    //  if we were previously at the right-most node in
+                    // the tree, _node = NULL, and the iterator specifies
+                    // the end of the list
+                    _node = p;
+                }
+                // left child go to right child 
+                // right child go to parent
                 return *this;
             }
 

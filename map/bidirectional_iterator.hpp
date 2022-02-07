@@ -36,7 +36,7 @@ namespace ft {
             }
 
             T& operator*()const{
-                return (*_node->_value);
+                return (_node->_value);
             }
 
             bidirectional_iterator &operator++(){

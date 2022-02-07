@@ -34,8 +34,11 @@ namespace ft {
 
             
             explicit Map (const key_compare& comp = key_compare(),const allocator_type& alloc = allocator_type()):_avltree(), _compare(comp), _alloc(alloc){}
-            // template <class InputIterator>
-            // Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()){}
+            template <class InputIterator>
+            Map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()): _avltree(), _compare(comp), _alloc(alloc){
+                while(first != last)
+                    _avltree.insert(*(first++));
+            }
             // Map (const Map& x){}
 
             /*-------------------------------------------------------------------------*/
@@ -78,9 +81,17 @@ namespace ft {
 
             /*----------------------------   CAPACITY   -------------------------------*/
 
-            // bool empty() const;
-            // size_type size() const;
-            // size_type max_size() const;
+            bool empty() const{
+                if (_avltree.getNodeCount()==0)
+                    return true;
+                return false;
+            }
+            size_type size() const{
+                return (_avltree.getNodeCount());
+            }
+            size_type max_size() const{
+                return (_alloc.max_size());
+            }
 
             /*-------------------------------------------------------------------------*/
 

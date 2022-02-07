@@ -41,11 +41,12 @@ namespace ft{
         public:
             typedef typename T::first_type Key;
             typedef typename T::second_type value;
+            typedef size_t size_type;
         private:
             Node<T> *_root;
             std::allocator< Node<T> > _alloc;
             std::allocator<T> _alloc2;
-            int _nodeCount;
+            size_type _nodeCount;
             Compare _compare;
 
 
@@ -62,7 +63,7 @@ namespace ft{
             }
             void update_height(Node<T> *root){
                 if (root != NULL) {
-                          
+                   
                     // Store the height of the
                     // current node
                     int val = 1;
@@ -180,12 +181,6 @@ namespace ft{
                 update_height(node->_right);
                 update_height(node->_parent);
                 update(node);
-
-                // Return the root node
-                // return root;
-                // newParent->_left = node;
-                // update(node);
-                // update(newParent);
                 return node;
             }
 
@@ -317,6 +312,9 @@ namespace ft{
                 return rightMost(_root)->_value;
             }
 
+            size_type getNodeCount()const{
+                return _nodeCount;
+            }
 
             void	tree_debug(const std::string &prefix,
                     const Node<T>* node, bool isLeft){

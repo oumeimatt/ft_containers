@@ -19,6 +19,7 @@ namespace ft{
 
     template <typename T>
     bool operator!=(const Node<T> &lhs, const Node<T> &rhs){
+        std::cout << "in" << std::endl;
         return (!(lhs==rhs));
     }
 
@@ -177,7 +178,6 @@ namespace ft{
                 // Update the heights
                 update_height(node->_left);
                 update_height(node->_right);
-                std::cout << "*/*/ herree */*/ " << std::endl;
                 update_height(node->_parent);
                 update(node);
 
@@ -325,8 +325,8 @@ namespace ft{
                     std::cout << prefix;
                     std::cout << (isLeft?"├──" : "└──");
                     std::cout << node->_value.first;
-                    if (node->_parent != NULL)
-                        std::cout << ":parent:" << node->_parent->_value.first;
+                    // if (node->_parent != NULL)
+                    //     std::cout << ":parent:" << node->_parent->_value.first;
                     std::cout << ":"  << std::endl;
 
                     tree_debug(prefix+(isLeft?"│   "

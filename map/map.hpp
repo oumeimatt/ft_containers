@@ -94,7 +94,7 @@ namespace ft {
 
             ft::pair<iterator,bool> insert (const value_type& val){
                 _avltree.insert(val);
-                _avltree.tree_debug();
+                // _avltree.tree_debug();
                 ft::pair<iterator,bool> a(begin(),true);
 
                 return (a);

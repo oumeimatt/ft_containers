@@ -41,34 +41,20 @@ namespace ft {
 
             bidirectional_iterator &operator++(){
 
-
                 if (_node->_right != NULL){
-
-                    //successor is the farthest left node of right subtree
-                    Node *l = _node->_right;
-                    while(l->_left != NULL)
-                        l = l->_left;
+                    _node = _node->_right;
+                    while (_node->_left != NULL)
+                        _node = _node->_left;
                 }
                 else{
-                    // have already processed the left subtree, and
-                    // there is no right subtree. move up the tree,
-                    // looking for a parent for which nodePtr is a left child,
-                    // stopping if the parent becomes NULL. a non-NULL parent
-                    // is the successor. if parent is NULL, the original node
-                    // was the last node inorder, and its successor
-                    // is the end of the list
-                    Node *p = _node->_parent;
+                    Node * p = _node->_parent;
                     while(p != NULL && _node == p->_right){
                         _node = p;
                         p = p->_parent;
                     }
-                    //  if we were previously at the right-most node in
-                    // the tree, _node = NULL, and the iterator specifies
-                    // the end of the list
                     _node = p;
                 }
-                // left child go to right child 
-                // right child go to parent
+
                 return *this;
             }
 
@@ -79,7 +65,26 @@ namespace ft {
             }
 
             bidirectional_iterator &operator--(){
+                if (_node == NULL)
+                    _node = _avltree->maxNode();
+                else if (_node ==_avltree->minNode()){
+                    return *this;
+                }
 
+                else if (_node->_left != NULL){
+                    _node = _node->_left;
+                    while (_node->_right != NULL)
+                        _node = _node->_right;
+                }
+                else{
+                    Node *p = _node->_parent;
+                    while(p != NULL && _node == p->_left){
+                        _node = p;
+                        p = p->_parent;
+                    }
+                    _node = p;
+                }
+                return *this;
             }
 
             bidirectional_iterator operator--(int){
@@ -92,10 +97,10 @@ namespace ft {
                 return tmp;
             }
             template <typename U, class Node1, class tree1, class Compare1>
-            friend bool operator==(const bidirectional_iterator<U, Node1, tree1, Compare1> & lhs, const bidirectional_iterator<U, Node, tree, Compare>  &rhs);
+            friend bool operator==(const bidirectional_iterator<U, Node1, tree1, Compare1> & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  &rhs);
 
             template <typename U, class Node1, class tree1, class Compare1>
-            friend bool operator!=(const bidirectional_iterator<U, Node1, tree1, Compare1>  & lhs, const bidirectional_iterator<U, Node, tree, Compare>  & rhs);
+            friend bool operator!=(const bidirectional_iterator<U, Node1, tree1, Compare1>  & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  & rhs);
         private:
             Node  *_node;
             tree *_avltree;
@@ -105,9 +110,9 @@ namespace ft {
 
     template <typename U, class Node1, class tree1, class Compare1>
     bool operator!=(const bidirectional_iterator<U, Node1, tree1, Compare1>  & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  &rhs){
-        return lhs._avltree != rhs._avltree;}
+        return lhs._node != rhs._node;}
 
     template <typename U, class Node1, class tree1, class Compare1>
-    bool operator==(const bidirectional_iterator<U, Node1, tree1, Compare1>  & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  & rhs){
+    bool operator==(const bidirectional_iterator<U, Node1, tree1, Compare1> & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  &rhs){
         return (!(lhs._node != rhs._node));}
 }

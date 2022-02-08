@@ -35,17 +35,20 @@ namespace ft{
     }
 
 
-    template<class T, class Compare = std::less<typename T::first_type> >
+    template<class T, class Compare = std::less<typename T::first_type>, class Alloc = std::allocator<T> >
     class AVLtree
     {
         public:
             typedef typename T::first_type Key;
             typedef typename T::second_type value;
             typedef size_t size_type;
+            typedef Alloc alloc_value;
+            typedef typename Alloc::template rebind<Node<T> >::other alloc_node;
+
         private:
             Node<T> *_root;
-            std::allocator< Node<T> > _alloc;
-            std::allocator<T> _alloc2;
+            alloc_node _alloc;
+            alloc_value _alloc2;
             size_type _nodeCount;
             Compare _compare;
 
@@ -54,13 +57,17 @@ namespace ft{
             bool contains(Node<T> *node, Key key){
                 if (node == NULL)
                     return false;
-                bool cmp = _compare(key, node->_value.first);
-                if (cmp == true)
+                if (key == node->_value.first)
+                    return true;
+                if (_compare(key, node->_value.first) == true)
                     return (contains(node->_left,  key));
                 else
                     return(contains(node->_right, key));
                 return (true);
             }
+    
+
+
             void update_height(Node<T> *root){
                 if (root != NULL) {
                    
@@ -83,6 +90,7 @@ namespace ft{
                 }
             }
 
+
             void update(Node<T> *node) {
                 int leftNodeHeight = (node->_left == NULL) ? -1 : node->_left->_height;
                 int rightNodeHeight = (node->_right == NULL) ? -1 : node->_right->_height;
@@ -96,10 +104,8 @@ namespace ft{
 
             Node<T> *balance(Node<T> *node){
                 // left heavy subtree
-                // std::cout << "     " <<node->_bf << "     "  << std::endl;
                 if (node->_bf == -2){
                     //left-left case 
-                    // std::cout << "     " <<node->_bf << "     "  << std::endl;
                     if (node->_left->_bf <= 0)
                         return leftLeftCase(node);
                     //left-right case
@@ -218,7 +224,7 @@ namespace ft{
                     Node<T> *root;
                     root = _alloc.allocate(1);
                     // root->_value = _alloc2.allocate(1);
-                    _alloc2.construct(&root->_value, val);
+                    _alloc2.construct(&(root->_value), val);
                     root->_right = NULL;
                     root->_left = NULL;
                     root->_parent = parent;
@@ -292,6 +298,7 @@ namespace ft{
             }
 
 
+
             T min(){
                 return leftMost(_root)->_value;
             }
@@ -314,6 +321,21 @@ namespace ft{
 
             size_type getNodeCount()const{
                 return _nodeCount;
+            }
+
+            Node<T> *findNode(Node<T> * root, Key key){
+                if (root ==NULL){
+                    return NULL;
+                }
+                if (root->_value.first == key)
+                    return (root);
+                else{
+                    if (_compare(key, root->_value.first) == true)
+                        return(findNode(root->_left, key));
+                    else
+                        return(findNode(root->_right, key));
+                }
+
             }
 
             void	tree_debug(const std::string &prefix,

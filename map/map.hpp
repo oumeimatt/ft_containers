@@ -15,8 +15,8 @@ namespace ft {
         public:
             typedef Key key_type;
             typedef T mapped_type;
-            typedef typename ft::pair< Key, T> value_type;
-            typedef typename ft::AVLtree<value_type,Compare> tree;
+            typedef typename ft::pair< const Key, T> value_type;
+            typedef typename ft::AVLtree<value_type,Compare, Alloc> tree;
             typedef Compare key_compare;
             // typede value_compare
             typedef Alloc allocator_type;
@@ -97,22 +97,37 @@ namespace ft {
 
             /*---------------------------- ELEMENT ACCESS -------------------------------*/
 
-            // mapped_type& operator[] (const key_type& k);
+            mapped_type& operator[] (const key_type& k){
+                ft::pair<key_type, mapped_type> p = ft::make_pair(k, mapped_type());
+                _avltree.insert(p);
+                node *tmp = _avltree.findNode(_avltree.getRoot(), k);
+                return (tmp->_value.second);
+            }
 
             /*-------------------------------------------------------------------------*/
 
             /*----------------------------   MODIFIERS   -------------------------------*/
 
             ft::pair<iterator,bool> insert (const value_type& val){
-                _avltree.insert(val);
-                // _avltree.tree_debug();
-                ft::pair<iterator,bool> a(begin(),true);
+                bool second = _avltree.insert(val);
+                node *tmp = _avltree.findNode(_avltree.getRoot(), val.first);
+                iterator first(tmp, &_avltree);
+                ft::pair<iterator,bool> a(first, second);
 
                 return (a);
             }
-            // iterator insert (iterator position, const value_type& val);
-            // template <class InputIterator>
-            // void insert (InputIterator first, InputIterator last);
+            iterator insert (iterator position, const value_type& val){
+                (void)position;
+                _avltree.insert(val);
+                node *tmp = _avltree.findNode(_avltree.getRoot(), val.first);
+                iterator first(tmp, &_avltree);
+                return first;
+            }
+            template <class InputIterator>
+            void insert (InputIterator first, InputIterator last){
+                while(first != last)
+                    _avltree.insert(*(first++));
+            }
             // void erase (iterator position);
             // size_type erase (const key_type& k);
             // void erase (iterator first, iterator last);
@@ -130,9 +145,24 @@ namespace ft {
 
             /*----------------------------   OPERATIONS  -------------------------------*/
 
-            // iterator find (const key_type& k);
-            // const_iterator find (const key_type& k) const;
-            // size_type count (const key_type& k) const;
+            iterator find (const key_type& k){
+                node *tmp = _avltree.findNode(_avltree.getRoot(), k);
+                if (tmp != NULL)
+                    return (iterator(tmp, &_avltree));
+                return end();
+            }
+            const_iterator find (const key_type& k) const{
+                node *tmp = _avltree.findNode(_avltree.getRoot(), k);
+                if (tmp != NULL)
+                    return (const_iterator(tmp, &_avltree));
+                return end();
+            }
+            size_type count (const key_type& k) const{
+                node *tmp = _avltree.findNode(_avltree.getRoot(), k);
+                if (tmp == NULL)
+                    return (0)
+                return (1);
+            }
             // iterator lower_bound (const key_type& k);
             // const_iterator lower_bound (const key_type& k) const;
             // iterator upper_bound (const key_type& k);

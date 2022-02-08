@@ -10,6 +10,8 @@ namespace ft {
         public:
             typedef T value_type;
             typedef ptrdiff_t difference_type;
+            typedef typename T::first_type key_type;
+
             
 
             bidirectional_iterator( void ):_node(), _avltree(){}
@@ -63,6 +65,7 @@ namespace ft {
                 ++(*this);
                 return tmp;
             }
+
 
             bidirectional_iterator &operator--(){
                 if (_node == NULL)

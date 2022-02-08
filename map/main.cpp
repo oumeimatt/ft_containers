@@ -7,37 +7,29 @@
 
 int main()
 {
-   {
-        ft::Map<int,int> a;
-        ft::pair<int, int> b(15, 16);
-        a.insert(b);
-        // ft::pair<int, int> c(3, 300);
-        // ft::pair<int, int> d(23, -300);
-        // ft::pair<int, int> e(44, 1000);
+    {
+        std::cout << "---------------------- ft::Map ------------------------" <<std::endl;
+        ft::Map<int,int> mymap;
+        ft::pair<int,int> a(1,122);
+        mymap.insert(a);
 
-        // a.insert(c);
-        // a.insert(d);
-        // a.insert(e);
-
-
-        std::cout<< a.max_size() <<std::endl;
-    //     // std::cout << it->first << std::endl;
+        // mymap[1]=123;
+        mymap[2]=456;
+    
+        std::cout << "mymap[1] is " << mymap[1] << '\n';
+        std::cout << "mymap[2] is " << mymap[2] << '\n';
     }
-    // {
-    //     std::map<int,int> a;
-    //     std::pair<int, int> b(15, 16);
-    //     a.insert(b);
-    //     // std::pair<int, int> c(3, 300);
-    //     // std::pair<int, int> d(23, -300);
-    //     // std::pair<int, int> e(44, 1000);
 
-    //     // a.insert(c);
-    //     // a.insert(d);
-    //     // a.insert(e);
-
-
-    //     std::cout<< a.max_size() <<std::endl;
-    // //     // std::cout << it->first << std::endl;
-    // }
+    {
+        std::cout << "---------------------- std::map ------------------------" <<std::endl;
+        std::map<int,int> mymap;
+        std::pair<int,int> a(1,122);
+        mymap.insert(a);
+        // mymap[1]=123;
+        mymap[2]=456;
+    
+        std::cout << "mymap[1] is " << mymap[1] << '\n';
+        std::cout << "mymap[2] is " << mymap[2] << '\n';
+    }
 
 }

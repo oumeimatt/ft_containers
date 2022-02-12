@@ -68,37 +68,14 @@ namespace ft{
     
 
 
-            void update_height(Node<T> *root){
+            void update(Node<T> *root){
                 if (root != NULL) {
                    
-                    // Store the height of the
-                    // current node
-                    int val = 1;
-
-                    // Store the height of the left
-                    // and right substree
-                    if (root->_left != NULL)
-                        val = root->_left->_height + 1;
-
-                    if (root->_right != NULL)
-                        val = std::max(
-                            val, root->_right->_height + 1);
-
-                    // Update the _height of the
-                    // current node
-                    root->_height = val;
+                    int leftNodeHeight = (root->_left == NULL) ? -1 : root->_left->_height;
+                    int rightNodeHeight = (root->_right == NULL) ? -1 : root->_right->_height;
+                    root->_height = 1 + std::max(leftNodeHeight, rightNodeHeight);
+                    root->_bf = rightNodeHeight - leftNodeHeight;
                 }
-            }
-
-
-            void update(Node<T> *node) {
-                int leftNodeHeight = (node->_left == NULL) ? -1 : node->_left->_height;
-                int rightNodeHeight = (node->_right == NULL) ? -1 : node->_right->_height;
-
-                // update this node's height
-                node->_height = 1 + std::max(leftNodeHeight, rightNodeHeight);
-                // update balance factor
-                node->_bf = rightNodeHeight - leftNodeHeight;
             }
 
 
@@ -183,9 +160,9 @@ namespace ft{
                 node = newParent;
 
                 // Update the heights
-                update_height(node->_left);
-                update_height(node->_right);
-                update_height(node->_parent);
+                update(node->_left);
+                update(node->_right);
+                update(node->_parent);
                 update(node);
                 return node;
             }
@@ -211,9 +188,9 @@ namespace ft{
                 node = newParent;
                 //
 
-                update_height(node->_left);
-                update_height(node->_right);
-                update_height(node->_parent);
+                update(node->_left);
+                update(node->_right);
+                update(node->_parent);
                 update(node);
                 return node;
             }
@@ -242,7 +219,44 @@ namespace ft{
                 return (balance(node));
             }
 
+            Node<T> *remove(Node <T> * node, T val){
+                bool cmp = _compare(val.first, node->_value.first);
+                if (val.first == node->_value.first){
+                    // ft::pair<int, int> a(9000,100000);
+                    if (node->_left == NULL){
+                        _alloc.deallocate(node  ,1);
+                        _alloc2.destroy(&(node->_value));
+                        // _alloc2.construct(&node->_value, a);
+                        return (node->_right);
+                    }
+                    else if (node->_right == NULL){
+                        _alloc.deallocate(node ,1);
+                        _alloc2.destroy(&(node->_value));
+                        // _alloc2.construct(&node->_value, a);
+                        return (node->_left);
+                    }
 
+                    else {
+
+                            // swap the value of the successor into the node
+                            std::cout << "the problem is here " << std::endl;
+                            T successorVal = rightMost(node->_left)->_value;
+                            _alloc2.construct(&(node->_value), successorVal);
+                            // find the largest node inthe left subtree
+                            node->_left = remove(node->_left, successorVal);
+                    }
+                }
+                
+                else if (cmp == true){
+                    node->_left = remove(node->_left, val);
+                }
+                else{
+                    node->_right = remove(node->_right, val);
+                }
+                update(node);
+                return (balance(node));
+                
+            }
             Node<T> *leftMost(Node<T> *root){
                 while (root != NULL && root->_left != NULL)
                     root = root->_left;
@@ -297,8 +311,16 @@ namespace ft{
                 return false;
             }
 
+            bool remove(T val){
+                if (contains(_root, val.first)) {
+                    _root = remove(_root, val);
+                    _nodeCount--;
+                    return true;
+                }
+                return false;
+            }
 
-
+    
             T min(){
                 return leftMost(_root)->_value;
             }
@@ -343,7 +365,7 @@ namespace ft{
                 if(node != NULL)
                 {
                     std::cout << prefix;
-                    std::cout << (isLeft?"├──" : "└──");
+                    std::cout << (isLeft?"L──" : "R──");
                     std::cout << node->_value.first;
                     // if (node->_parent != NULL)
                     //     std::cout << ":parent:" << node->_parent->_value.first;
@@ -363,7 +385,9 @@ namespace ft{
                 std::cout << std::endl;
                 tree_debug("$", _root, false);
             }
-
+            alloc_value get_allocator()const{
+                return _alloc2;
+            }
 
     };
 }

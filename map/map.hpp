@@ -39,7 +39,10 @@ namespace ft {
                 while(first != last)
                     _avltree.insert(*(first++));
             }
-            // Map (const Map& x){}
+            Map (const Map& x){
+                (void)x;
+
+            }
 
             /*-------------------------------------------------------------------------*/
 
@@ -51,7 +54,10 @@ namespace ft {
 
             /*-----------------------  ASSIGNEMENT OPERATOR   --------------------------*/
 
-            // Map& operator= (const Map& x);
+            Map& operator= (const Map& x){
+                (void)x;
+                return *this;
+            }
 
             /*-------------------------------------------------------------------------*/
 
@@ -69,13 +75,12 @@ namespace ft {
                 return(iterator(NULL, &_avltree));
             }
             const_iterator end() const{
-                node *root = _avltree.maxNode();
-                return(iterator(root, &_avltree));
+                return(iterator(NULL, &_avltree));
             }
-            // reverse_iterator rbegin();
-            // const_reverse_iterator rbegin() const;
-            // reverse_iterator rend();
-            // const_reverse_iterator rend() const;
+            // reverse_iterator rbegin(){}
+            // const_reverse_iterator rbegin() const{}
+            // reverse_iterator rend(){}
+            // const_reverse_iterator rend() const{}
 
             /*-------------------------------------------------------------------------*/
 
@@ -128,7 +133,13 @@ namespace ft {
                 while(first != last)
                     _avltree.insert(*(first++));
             }
-            // void erase (iterator position);
+            void erase (iterator position){
+                _avltree.tree_debug();
+                value_type val = *(position);
+                _avltree.remove(val);
+                _avltree.tree_debug();
+                // std::cout << "back to erase in map" << std::endl;
+            }
             // size_type erase (const key_type& k);
             // void erase (iterator first, iterator last);
             // void swap (Map& x);
@@ -160,7 +171,7 @@ namespace ft {
             size_type count (const key_type& k) const{
                 node *tmp = _avltree.findNode(_avltree.getRoot(), k);
                 if (tmp == NULL)
-                    return (0)
+                    return (0);
                 return (1);
             }
             // iterator lower_bound (const key_type& k);
@@ -174,7 +185,9 @@ namespace ft {
 
             /*----------------------------   ALLOCATOR   -------------------------------*/
 
-            // allocator_type get_allocator() const;
+            allocator_type get_allocator() const{
+                return (_avltree.get_allocator());
+            }
 
             /*--------------------------------------------------------------------------*/
         private:

@@ -42,21 +42,32 @@ namespace ft {
             }
 
             bidirectional_iterator &operator++(){
-
-                if (_node->_right != NULL){
-                    _node = _node->_right;
-                    while (_node->_left != NULL)
+                
+                std::cout <<"<<<<<< " <<_avltree->min().first  << ">>>>> " << std::endl;
+                if (_node == NULL)
+                {
+                    _node = _avltree->getRoot();
+                    while ( _node->_left != NULL)
                         _node = _node->_left;
                 }
                 else{
-                    Node * p = _node->_parent;
-                    while(p != NULL && _node == p->_right){
-                        _node = p;
-                        p = p->_parent;
+                    if (_node->_right != NULL){
+                        _node = _node->_right;
+                        while (_node->_left != NULL)
+                            _node = _node->_left;
                     }
-                    _node = p;
-                }
+                    else {
 
+                        Node * p = _node->_parent;
+                        while(p != NULL && _node == p->_right){
+                            _node = p;
+                            p = p->_parent;
+                        }
+                        _node = p;
+                    }
+                }
+                // if (_node != NULL)
+                //     std::cout << "<<<< " << _node->_value.first <<  " >>>>" << std::endl ;
                 return *this;
             }
 

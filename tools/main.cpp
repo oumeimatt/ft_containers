@@ -16,8 +16,8 @@ int main() {
    ft::pair<int, int> f(2, 10200);
    ft::pair<int, int> g(12, 100330);
    ft::pair<int, int> h(90, 10030);
+   ft::pair<int, int> m(1, 10030);
    
-
    avl.insert(b);
    avl.insert(c);
    avl.insert(d);
@@ -25,8 +25,9 @@ int main() {
    avl.insert(f);
    avl.insert(g);
    avl.insert(h);
-
-
+   avl.insert(m);
+   avl.remove(c);
+   // avl.remove(d);
 
    avl.tree_debug();
    // std::cout << avl.min().first << std::endl;

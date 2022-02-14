@@ -69,6 +69,34 @@ namespace ft {
         return (first1 == last1) && (first2 != last2);
     }
 
+    template<class Iterator>
+    struct iterator_traits {
+        typedef typename Iterator::difference_type difference_type;
+        typedef typename Iterator::value_type value_type;
+        typedef typename Iterator::pointer pointer;
+        typedef typename Iterator::reference reference;
+        typedef typename Iterator::iterator_category iterator_category;
+    };
+    
+
+    template<class T> 
+    struct iterator_traits<T*> {
+        typedef ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef T* pointer;
+        typedef T& reference;
+    };
+
+
+    template<class T> 
+    struct iterator_traits<const T*> {
+        typedef ptrdiff_t difference_type;
+        typedef T value_type;
+        typedef const T* pointer;
+        typedef const T& reference;
+    };
+
+
     template <class T1, class T2>
     struct pair{
         typedef T1 first_type;

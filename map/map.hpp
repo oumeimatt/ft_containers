@@ -5,6 +5,8 @@
 #include "../tools/tools.hpp"
 #include "../tools/avl.hpp"
 #include "bidirectional_iterator.hpp"
+#include "../tools/reverse_itererator.hpp"
+
 
 namespace ft {
 
@@ -27,7 +29,10 @@ namespace ft {
             typedef typename ft::Node<value_type> node;
             typedef typename ft::bidirectional_iterator<value_type , node,tree, Compare> iterator;
             typedef typename ft::bidirectional_iterator<const value_type,node ,tree, Compare> const_iterator;
-            typedef ptrdiff_t difference_type;
+            typedef typename ft::reverse_iterator<iterator> reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
+
+            typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
             typedef  size_t size_type;
 
             /*-------------------------   CONSTRUCTORS   -----------------------------*/
@@ -39,8 +44,8 @@ namespace ft {
                 while(first != last)
                     _avltree.insert(*(first++));
             }
-            Map (const Map& x){
-                (void)x;
+            Map (const Map& x) : _avltree(), _compare(x._compare), _alloc(x._alloc){
+                *this = x;
 
             }
 
@@ -55,7 +60,7 @@ namespace ft {
             /*-----------------------  ASSIGNEMENT OPERATOR   --------------------------*/
 
             Map& operator= (const Map& x){
-                (void)x;
+                _avltree = x._avltree;
                 return *this;
             }
 
@@ -67,21 +72,40 @@ namespace ft {
                 node *root = _avltree.minNode();
                 return(iterator(root, &_avltree));
             }
+
             const_iterator begin() const{
                 node *root = _avltree.minNode();
                 return(iterator(root, &_avltree));
             }
+
             iterator end(){
                 return(iterator(NULL, &_avltree));
             }
+
             const_iterator end() const{
                 return(iterator(NULL, &_avltree));
             }
-            // reverse_iterator rbegin(){}
-            // const_reverse_iterator rbegin() const{}
-            // reverse_iterator rend(){}
-            // const_reverse_iterator rend() const{}
 
+            reverse_iterator rbegin(){
+                reverse_iterator rb(end());
+                return (rb);
+            }
+
+            const_reverse_iterator rbegin() const{
+                const_reverse_iterator rb(end());
+                return (rb);
+            }
+
+            reverse_iterator rend(){
+                reverse_iterator re(begin());
+                return (re);
+            }
+
+            const_reverse_iterator rend() const{
+                const_reverse_iterator re(begin());
+                return (re);
+            }
+ 
             /*-------------------------------------------------------------------------*/
 
             /*----------------------------   CAPACITY   -------------------------------*/
@@ -134,14 +158,18 @@ namespace ft {
                     _avltree.insert(*(first++));
             }
             void erase (iterator position){
-                _avltree.tree_debug();
                 value_type val = *(position);
-                _avltree.remove(val);
-                _avltree.tree_debug();
-                // std::cout << "back to erase in map" << std::endl;
+                _avltree.remove(val.first);
             }
-            // size_type erase (const key_type& k);
-            // void erase (iterator first, iterator last);
+            size_type erase (const key_type& k){
+                return (_avltree.remove(k));
+            }
+            void erase (iterator first, iterator last){
+                while (first != last){
+                    _avltree.remove(first->first);
+                    first++;
+                }
+            }
             // void swap (Map& x);
             // void clear();
 

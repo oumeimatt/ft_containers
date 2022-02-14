@@ -30,6 +30,7 @@ namespace ft {
             bidirectional_iterator & operator=(const bidirectional_iterator<T, Node, tree, Compare> &rhs){
                 this->_node = rhs._node;
                 this->_compare = rhs._compare;
+                this->_avltree = rhs._avltree;
                 return *this;
             }
 
@@ -43,13 +44,8 @@ namespace ft {
 
             bidirectional_iterator &operator++(){
                 
-                std::cout <<"<<<<<< " <<_avltree->min().first  << ">>>>> " << std::endl;
                 if (_node == NULL)
-                {
-                    _node = _avltree->getRoot();
-                    while ( _node->_left != NULL)
-                        _node = _node->_left;
-                }
+                    _node = _avltree->minNode();
                 else{
                     if (_node->_right != NULL){
                         _node = _node->_right;
@@ -81,10 +77,6 @@ namespace ft {
             bidirectional_iterator &operator--(){
                 if (_node == NULL)
                     _node = _avltree->maxNode();
-                else if (_node ==_avltree->minNode()){
-                    return *this;
-                }
-
                 else if (_node->_left != NULL){
                     _node = _node->_left;
                     while (_node->_right != NULL)
@@ -115,7 +107,7 @@ namespace ft {
 
             template <typename U, class Node1, class tree1, class Compare1>
             friend bool operator!=(const bidirectional_iterator<U, Node1, tree1, Compare1>  & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  & rhs);
-        private:
+        public:
             Node  *_node;
             tree *_avltree;
             Compare _compare;

@@ -66,7 +66,14 @@ namespace ft{
                 return (true);
             }
     
-
+            T findValue(Node<T> *node, const Key & k){
+                if (k == node->_value.first)
+                    return (node->_value);
+                if (_compare(k, node->_value.first) == true)
+                    return (findValue(node->_left, k));
+                else
+                    return (findValue(node->_right, k));
+            }
 
             void update(Node<T> *root){
                 if (root != NULL) {
@@ -200,7 +207,6 @@ namespace ft{
                 if (node == NULL){
                     Node<T> *root;
                     root = _alloc.allocate(1);
-                    // root->_value = _alloc2.allocate(1);
                     _alloc2.construct(&(root->_value), val);
                     root->_right = NULL;
                     root->_left = NULL;
@@ -219,39 +225,35 @@ namespace ft{
                 return (balance(node));
             }
 
-            Node<T> *remove(Node <T> * node, T val){
-                bool cmp = _compare(val.first, node->_value.first);
-                if (val.first == node->_value.first){
-                    // ft::pair<int, int> a(9000,100000);
+            Node<T> *remove(Node <T> * node, Key k){
+                bool cmp = _compare(k, node->_value.first);
+                if (k == node->_value.first){
                     if (node->_left == NULL){
-                        _alloc.deallocate(node  ,1);
                         _alloc2.destroy(&(node->_value));
-                        // _alloc2.construct(&node->_value, a);
+                        _alloc.deallocate(node  ,1);
                         return (node->_right);
                     }
                     else if (node->_right == NULL){
-                        _alloc.deallocate(node ,1);
                         _alloc2.destroy(&(node->_value));
-                        // _alloc2.construct(&node->_value, a);
+                        _alloc.deallocate(node ,1);
                         return (node->_left);
                     }
 
                     else {
 
                             // swap the value of the successor into the node
-                            std::cout << "the problem is here " << std::endl;
                             T successorVal = rightMost(node->_left)->_value;
                             _alloc2.construct(&(node->_value), successorVal);
                             // find the largest node inthe left subtree
-                            node->_left = remove(node->_left, successorVal);
+                            node->_left = remove(node->_left, successorVal.first);
                     }
                 }
                 
                 else if (cmp == true){
-                    node->_left = remove(node->_left, val);
+                    node->_left = remove(node->_left, k);
                 }
                 else{
-                    node->_right = remove(node->_right, val);
+                    node->_right = remove(node->_right, k);
                 }
                 update(node);
                 return (balance(node));
@@ -265,21 +267,53 @@ namespace ft{
 
 
             Node<T> *rightMost(Node<T> *root){
-                while (root != NULL && root->_right != NULL)
+                while (root != NULL && root->_right != NULL){
+                    // std::cout << " << " << root->_value.first << " >> " << std::endl;
+                    
                     root = root->_right;
+                }
+                // if (root != NULL)
+                //         std::cout << " << " << root->_value.first << " >> " << std::endl;
                 return root;
             }
+            void insertData(Node<T> *x){
+                if (x != NULL){
+                    insert(x->_value);
+                    insertData(x->_left);
+                    insertData(x->_right);
+                }
+            }
 
-
+            void deleteNode(Node<T> *node){
+                if (node != NULL){
+                    _alloc2.destroy(&node->_value);
+                    deleteNode(node->_right);
+                    deleteNode(node->_left);
+                    _alloc.deallocate(node, 1);
+                }
+                
+            }
         public:
             AVLtree(): _root(NULL), _nodeCount(0){}
             
-            ~AVLtree(){}
+            AVLtree & operator=(const AVLtree &x){
+                clear();
+                Node<T> *tmp = x._root;
+                insertData(tmp);
+                return *this;
+            }
+
+
+            ~AVLtree(){
+                clear();
+            }
             Node<T> * getRoot()const{
                 return _root;
             }
 
-
+            void clear(){
+                deleteNode(_root);
+            }
             int height(){
                 if (_root == NULL)
                     return (0);
@@ -311,9 +345,9 @@ namespace ft{
                 return false;
             }
 
-            bool remove(T val){
-                if (contains(_root, val.first)) {
-                    _root = remove(_root, val);
+            bool remove(Key k){
+                if (contains(_root, k) ){
+                    _root = remove(_root, k);
                     _nodeCount--;
                     return true;
                 }
@@ -327,13 +361,16 @@ namespace ft{
 
             
             Node<T> *minNode(){
-                
+                if (_root == NULL)
+                    std::cout << "minNode   == "  << std::endl;
                 return leftMost(_root);
             }
 
 
             Node<T> *maxNode(){
-                return rightMost(_root);
+                // tree_debug();
+                Node<T> * tmp = rightMost(_root);
+                return (tmp);
             }
 
 

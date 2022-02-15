@@ -19,7 +19,6 @@ namespace ft{
 
     template <typename T>
     bool operator!=(const Node<T> &lhs, const Node<T> &rhs){
-        std::cout << "in" << std::endl;
         return (!(lhs==rhs));
     }
 
@@ -54,7 +53,7 @@ namespace ft{
 
 
 
-            bool contains(Node<T> *node, Key key){
+            bool contains(Node<T> *node, Key key) const{
                 if (node == NULL)
                     return false;
                 if (key == node->_value.first)
@@ -65,7 +64,9 @@ namespace ft{
                     return(contains(node->_right, key));
                 return (true);
             }
-    
+
+
+
             T findValue(Node<T> *node, const Key & k){
                 if (k == node->_value.first)
                     return (node->_value);
@@ -259,21 +260,17 @@ namespace ft{
                 return (balance(node));
                 
             }
-            Node<T> *leftMost(Node<T> *root){
+            Node<T> *leftMost(Node<T> *root)const{
                 while (root != NULL && root->_left != NULL)
                     root = root->_left;
                 return root;
             }
 
 
-            Node<T> *rightMost(Node<T> *root){
+            Node<T> *rightMost(Node<T> *root)const{
                 while (root != NULL && root->_right != NULL){
-                    // std::cout << " << " << root->_value.first << " >> " << std::endl;
-                    
                     root = root->_right;
                 }
-                // if (root != NULL)
-                //         std::cout << " << " << root->_value.first << " >> " << std::endl;
                 return root;
             }
             void insertData(Node<T> *x){
@@ -313,6 +310,7 @@ namespace ft{
 
             void clear(){
                 deleteNode(_root);
+                _nodeCount = 0;
             }
             int height(){
                 if (_root == NULL)
@@ -331,8 +329,8 @@ namespace ft{
             }
 
 
-            bool contains(T value){
-                return(contains(_root, value));
+            bool contains(Key k) const{
+                return(contains(_root, k));
             }
 
 
@@ -355,26 +353,26 @@ namespace ft{
             }
 
     
-            T min(){
+            T min()const{
                 return leftMost(_root)->_value;
             }
 
             
-            Node<T> *minNode(){
-                if (_root == NULL)
-                    std::cout << "minNode   == "  << std::endl;
+            Node<T> *minNode()const{
+                // if (_root == NULL)
+                //     std::cout << "minNode   == "  << std::endl;
                 return leftMost(_root);
             }
 
 
-            Node<T> *maxNode(){
+            Node<T> *maxNode()const{
                 // tree_debug();
                 Node<T> * tmp = rightMost(_root);
                 return (tmp);
             }
 
 
-            T max(){
+            T max()const{
                 return rightMost(_root)->_value;
             }
 
@@ -382,7 +380,7 @@ namespace ft{
                 return _nodeCount;
             }
 
-            Node<T> *findNode(Node<T> * root, Key key){
+            Node<T> *findNode(Node<T> * root, Key key) const{
                 if (root ==NULL){
                     return NULL;
                 }
@@ -397,31 +395,34 @@ namespace ft{
 
             }
 
-            void	tree_debug(const std::string &prefix,
-                    const Node<T>* node, bool isLeft){
-                if(node != NULL)
-                {
-                    std::cout << prefix;
-                    std::cout << (isLeft?"L──" : "R──");
-                    std::cout << node->_value.first;
-                    // if (node->_parent != NULL)
-                    //     std::cout << ":parent:" << node->_parent->_value.first;
-                    std::cout << ":"  << std::endl;
 
-                    tree_debug(prefix+(isLeft?"│   "
-                                : "    "),
-                            node->_left, true);
-                    tree_debug(prefix+(isLeft?"│   "
-                                : "    "),
-                            node->_right, false);
-                }
-            }
+            // void	tree_debug(const std::string &prefix,
+            //         const Node<T>* node, bool isLeft){
+            //     if(node != NULL)
+            //     {
+            //         std::cout << prefix;
+            //         std::cout << (isLeft?"L──" : "R──");
+            //         std::cout << node->_value.first;
+            //         // if (node->_parent != NULL)
+            //         //     std::cout << ":parent:" << node->_parent->_value.first;
+            //         std::cout << ":"  << std::endl;
 
+            //         tree_debug(prefix+(isLeft?"│   "
+            //                     : "    "),
+            //                 node->_left, true);
+            //         tree_debug(prefix+(isLeft?"│   "
+            //                     : "    "),
+            //                 node->_right, false);
+            //     }
+            // }
+            
 
-            void	tree_debug(void){
-                std::cout << std::endl;
-                tree_debug("$", _root, false);
-            }
+            
+
+            // void	tree_debug(void){
+            //     std::cout << std::endl;
+            //     tree_debug("$", _root, false);
+            // }
             alloc_value get_allocator()const{
                 return _alloc2;
             }

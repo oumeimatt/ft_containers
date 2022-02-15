@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include "random_access_iterator.hpp"
 #include "../tools/tools.hpp"
+#include "../tools/reverse_itererator.hpp"
 
 namespace ft {
 
@@ -20,6 +21,8 @@ namespace ft {
             typedef typename allocator_type::const_pointer const_pointer;
             typedef ft::random_access_iterator<T> iterator;
             typedef ft::random_access_iterator<const T> const_iterator;
+            typedef ft::reverse_iterator<iterator> reverse_iterator;
+            typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
             typedef ptrdiff_t difference_type;
             typedef  size_t size_type;
 
@@ -98,10 +101,18 @@ namespace ft {
                 return iterator(_arr + _curr_size);
             }
 
-            // reverse_iterator rbegin(){}
-            // const_reverse_iterator rbegin() const{}
-            // reverse_iterator rend(){}
-            // const_reverse_iterator rend() const{}
+            reverse_iterator rbegin(){
+                return reverse_iterator(end());
+            }
+            const_reverse_iterator rbegin() const{
+                return const_reverse_iterator(end());
+            }
+            reverse_iterator rend(){
+                return reverse_iterator(begin());
+            }
+            const_reverse_iterator rend() const{
+                return const_reverse_iterator(begin());
+            }
 
             /*---------------------------------------------------------------------------*/
 

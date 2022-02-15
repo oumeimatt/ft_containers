@@ -11,43 +11,39 @@ int  main()
     {
         std::cout << "---------------------- ft::Map ------------------------" <<std::endl;
 
-        ft::Map<char,int> mymap;
-        mymap['x'] = 100;
-        mymap['y'] = 200;
-        mymap['z'] = 300;      
+        ft::Map<int, int> aaa;
+        ft::pair<int, int> a(1,1);
+        ft::pair<int, int> b(2,2);
+        ft::pair<int, int> c(3,3);
 
 
+        aaa.insert(a);
+        aaa.insert(b);
+        aaa.insert(c);
 
-
-        // show content:
-        ft::Map<char,int>::reverse_iterator rit = mymap.rend();
-        --rit;
-        // for (; rit!= (mymap.rbegin()) ; rit--)
-          std::cout << rit->first << " => " << rit->second << '\n';    
-          --rit;
-          std::cout << rit->first << " => " << rit->second << '\n';   
-            --rit;
-            std::cout << rit->first << " => " << rit->second << '\n';   
+        ft::Map<int, int>::const_iterator it = aaa.begin();
+        std::cout << it->first << std::endl;
     }
 
 
 
-    // {
-    //     std::cout << "---------------------- std::map ------------------------" <<std::endl;
-
-    //     std::map<char,int> mymap;       
-    //     mymap['x'] = 100;
-    //     mymap['y'] = 200;
-    //     mymap['z'] = 300;       
+    {
+        std::cout << "---------------------- std::map ------------------------" <<std::endl;
 
 
+        std::map<int, int> aaa;
+        std::pair<int, int> a(1,1);
+        std::pair<int, int> b(2,2);
+        std::pair<int, int> c(3,3);
 
-    // //     // show content:
-    //     std::map<char,int>::reverse_iterator rit = --mymap.rend();
-    // //     for (; rit!= (mymap.rbegin()) ; rit--)
-    //       std::cout << rit->first << " => " << rit->second << '\n';      
 
+        aaa.insert(a);
+        aaa.insert(b);
+        aaa.insert(c);
+
+        std::map<int, int>::const_iterator it = aaa.begin();
+        std::cout << it->first << std::endl;
         
-    // }
+    }
 
 }

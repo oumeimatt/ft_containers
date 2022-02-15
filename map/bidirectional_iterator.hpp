@@ -15,15 +15,18 @@ namespace ft {
             
 
             bidirectional_iterator( void ):_node(), _avltree(){}
-            bidirectional_iterator(Node  *node, tree *avltree):_node(node), _avltree(avltree){}
+            bidirectional_iterator( Node  *node, tree *avltree):_node(node), _avltree(avltree){}
             
 
-            operator bidirectional_iterator<const T, Node, tree,Compare>()const{
-                return bidirectional_iterator<const T, Node, tree, Compare>(_node, _avltree);
+            operator bidirectional_iterator<const T, const Node, const tree,Compare>()const{
+                return (bidirectional_iterator<const T, const Node, const tree, Compare>(_node, _avltree));
             }
+
+
             bidirectional_iterator(const bidirectional_iterator<T, Node, tree, Compare> &src){
                 *this = src;
             }
+
 
             ~bidirectional_iterator(){}
 
@@ -62,8 +65,6 @@ namespace ft {
                         _node = p;
                     }
                 }
-                // if (_node != NULL)
-                //     std::cout << "<<<< " << _node->_value.first <<  " >>>>" << std::endl ;
                 return *this;
             }
 
@@ -93,23 +94,30 @@ namespace ft {
                 return *this;
             }
 
+
             bidirectional_iterator operator--(int){
                 bidirectional_iterator tmp(*this);
                 --(*this);
                 return tmp;
             }
+
+
             bidirectional_iterator begin(){
                 bidirectional_iterator tmp(_avltree->minNode(), _avltree);
                 return tmp;
             }
+
+
+
+
             template <typename U, class Node1, class tree1, class Compare1>
             friend bool operator==(const bidirectional_iterator<U, Node1, tree1, Compare1> & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  &rhs);
 
             template <typename U, class Node1, class tree1, class Compare1>
             friend bool operator!=(const bidirectional_iterator<U, Node1, tree1, Compare1>  & lhs, const bidirectional_iterator<U, Node1, tree1, Compare1>  & rhs);
-        public:
-            Node  *_node;
-            tree *_avltree;
+        private:
+            Node *_node;
+            tree const *_avltree;
             Compare _compare;
 
     };

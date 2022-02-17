@@ -6,6 +6,7 @@
 #include "../tools/avl.hpp"
 #include "bidirectional_iterator.hpp"
 #include "../tools/reverse_itererator.hpp"
+#include "../vector/Vector.hpp"
 
 
 namespace ft {
@@ -57,7 +58,7 @@ namespace ft {
                     _avltree.insert(*(first++));
             }
             Map (const Map& x) : _avltree(), _compare(x._compare), _alloc(x._alloc){
-                *this = x;
+                _avltree.assign(x._avltree);
 
             }
 
@@ -72,7 +73,9 @@ namespace ft {
             /*-----------------------  ASSIGNEMENT OPERATOR   --------------------------*/
 
             Map& operator= (const Map& x){
-                _avltree = x._avltree;
+                _avltree.assign(x._avltree);
+                _compare  = x._compare;
+                _alloc = x._alloc;
                 return *this;
             }
 
@@ -177,10 +180,18 @@ namespace ft {
                 return (_avltree.remove(k));
             }
             void erase (iterator first, iterator last){
-                while (first != last){
-                    _avltree.remove(first->first);
-                    first++;
+                if (size() >0){
+                    ft::Vector<key_type> tmp;
+                    while (first != last){
+                        tmp.push_back(first->first);
+                        first++;
+                    }
+                    for (typename ft::Vector<key_type>::iterator it = tmp.begin(); it != tmp.end(); it++){
+                        _avltree.remove(*it);
+                        // std::cout << *it << "  removed " << std::endl;
+                    }
                 }
+
             }
             void swap (Map& x){
                 Map tmp;

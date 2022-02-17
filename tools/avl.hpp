@@ -13,6 +13,14 @@ namespace ft{
         T _value;
         int _height;
         Node<T> *_left, *_right, *_parent;
+        Node<T> & operator=(const Node<T> & src){
+            _bf = src._bf;
+            _value = src._value;
+            _height = src._height;
+            _left = src._left;
+            _right = src._right;
+            _parent = src._parent;
+        }
         Node(T value) : _value(value){}
     };
 
@@ -229,17 +237,61 @@ namespace ft{
             Node<T> *remove(Node <T> * node, Key k){
                 bool cmp = _compare(k, node->_value.first);
                 if (k == node->_value.first){
-                    if (node->_left == NULL){
-                        _alloc2.destroy(&(node->_value));
-                        _alloc.deallocate(node  ,1);
+                    if (node->_left == NULL && node->_right != NULL) {
+                        if (node->_parent != NULL) {
+                            if (_compare(node->_parent->_value.first, node->_value.first) == true)
+                                node->_parent->_right = node->_right;
+                            else
+                                node->_parent->_left = node->_right;
+
+                            // Update the height
+                            // of the root's parent
+                            update(node->_parent);
+                        }
+
+                        node->_right->_parent = node->_parent;
+
+                        // Balance the node after
+                        // deletion
+                        node->_right = balance(node->_right);
                         return (node->_right);
                     }
-                    else if (node->_right == NULL){
-                        _alloc2.destroy(&(node->_value));
-                        _alloc.deallocate(node ,1);
+
+                    else if (node->_right == NULL && node->_left != NULL) {
+                        if (node->_parent != NULL) {
+                            if (_compare(node->_parent->_value.first, node->_value.first) ==true )
+                                node->_parent->_right = node->_left;
+                            else
+                                node->_parent->_left = node->_left;
+  
+                            // Update the height
+                            // of node's parent
+                            update(node->_parent);
+                        }
+  
+                        node->_left->_parent = node->_parent;
+  
+                        // balance the node
+                        // after deletion
+                        node->_left = balance(
+                            node->_left);
                         return (node->_left);
                     }
+                    else if (node->_left == NULL && node->_right == NULL) {
+                        if (node->_parent != NULL){
+                            if (_compare(node->_parent->_value.first ,node->_value.first) == true) {
+                                node->_parent->_right = NULL;
+                            }
+                            else {
+                                node->_parent->_left = NULL;
+                            }
 
+                            update(node->_parent);
+  
+                            node = NULL;
+                            return NULL;
+                        }
+                    }
                     else {
 
                             // swap the value of the successor into the node
@@ -276,24 +328,27 @@ namespace ft{
             void insertData(Node<T> *x){
                 if (x != NULL){
                     insert(x->_value);
+                    // std::cout << "first === " << x->_value.first << "   | second == " << x->_value.second << std::endl;
                     insertData(x->_left);
                     insertData(x->_right);
+
                 }
             }
 
-            void deleteNode(Node<T> *node){
-                if (node != NULL){
-                    _alloc2.destroy(&node->_value);
+            void deleteNode(Node<T> * &node){
+                if (node && node != NULL){
                     deleteNode(node->_right);
                     deleteNode(node->_left);
+                    _alloc2.destroy(&node->_value);
                     _alloc.deallocate(node, 1);
                 }
-                
+                node = NULL;
             }
         public:
             AVLtree(): _root(NULL), _nodeCount(0){}
             
-            AVLtree & operator=(const AVLtree &x){
+
+            AVLtree & assign(const AVLtree &x){
                 clear();
                 Node<T> *tmp = x._root;
                 insertData(tmp);
@@ -302,13 +357,14 @@ namespace ft{
 
 
             ~AVLtree(){
-                clear();
+                // clear();
             }
             Node<T> * getRoot()const{
                 return _root;
             }
 
             void clear(){
+                // std::cout << "here" << std::endl;
                 deleteNode(_root);
                 _nodeCount = 0;
             }
@@ -396,33 +452,33 @@ namespace ft{
             }
 
 
-            // void	tree_debug(const std::string &prefix,
-            //         const Node<T>* node, bool isLeft){
-            //     if(node != NULL)
-            //     {
-            //         std::cout << prefix;
-            //         std::cout << (isLeft?"L──" : "R──");
-            //         std::cout << node->_value.first;
-            //         // if (node->_parent != NULL)
-            //         //     std::cout << ":parent:" << node->_parent->_value.first;
-            //         std::cout << ":"  << std::endl;
+            void	tree_debug(const std::string &prefix,
+                    const Node<T>* node, bool isLeft){
+                if(node != NULL)
+                {
+                    std::cout << prefix;
+                    std::cout << (isLeft?"L──" : "R──");
+                    std::cout << node->_value.first;
+                    // if (node->_parent != NULL)
+                    //     std::cout << ":parent:" << node->_parent->_value.first;
+                    std::cout << ":"  << std::endl;
 
-            //         tree_debug(prefix+(isLeft?"│   "
-            //                     : "    "),
-            //                 node->_left, true);
-            //         tree_debug(prefix+(isLeft?"│   "
-            //                     : "    "),
-            //                 node->_right, false);
-            //     }
-            // }
+                    tree_debug(prefix+(isLeft?"│   "
+                                : "    "),
+                            node->_left, true);
+                    tree_debug(prefix+(isLeft?"│   "
+                                : "    "),
+                            node->_right, false);
+                }
+            }
             
 
             
 
-            // void	tree_debug(void){
-            //     std::cout << std::endl;
-            //     tree_debug("$", _root, false);
-            // }
+            void	tree_debug(void){
+                std::cout << std::endl;
+                tree_debug("$", _root, false);
+            }
             alloc_value get_allocator()const{
                 return _alloc2;
             }

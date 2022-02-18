@@ -52,7 +52,7 @@ namespace ft{
             typedef Alloc alloc_value;
             typedef typename Alloc::template rebind<Node<T> >::other alloc_node;
 
-        private:
+        public:
             Node<T> *_root;
             alloc_node _alloc;
             alloc_value _alloc2;
@@ -273,8 +273,7 @@ namespace ft{
   
                         // balance the node
                         // after deletion
-                        node->_left = balance(
-                            node->_left);
+                        node->_left = balance(node->_left);
                         return (node->_left);
                     }
                     else if (node->_left == NULL && node->_right == NULL) {
@@ -287,21 +286,23 @@ namespace ft{
                             }
 
                             update(node->_parent);
-  
+                            _alloc2.destroy(&(node->_value));
+                            _alloc.deallocate(node, 1);
+
                             node = NULL;
                             return NULL;
                         }
                     }
                     else {
-
                             // swap the value of the successor into the node
                             T successorVal = rightMost(node->_left)->_value;
+                            _alloc2.destroy(&node->_value);
                             _alloc2.construct(&(node->_value), successorVal);
                             // find the largest node inthe left subtree
                             node->_left = remove(node->_left, successorVal.first);
                     }
                 }
-                
+
                 else if (cmp == true){
                     node->_left = remove(node->_left, k);
                 }
@@ -328,7 +329,6 @@ namespace ft{
             void insertData(Node<T> *x){
                 if (x != NULL){
                     insert(x->_value);
-                    // std::cout << "first === " << x->_value.first << "   | second == " << x->_value.second << std::endl;
                     insertData(x->_left);
                     insertData(x->_right);
 
@@ -347,6 +347,17 @@ namespace ft{
         public:
             AVLtree(): _root(NULL), _nodeCount(0){}
             
+            AVLtree(const AVLtree &x):_root(), _nodeCount(x._nodeCount){
+                assign(x);
+            }
+            AVLtree & operator=(const AVLtree& x){
+                // tree_debug();
+                _root = x._root;
+
+                // tree_debug();
+                _nodeCount = x._nodeCount;
+                return *this;
+            }
 
             AVLtree & assign(const AVLtree &x){
                 clear();
@@ -357,14 +368,10 @@ namespace ft{
 
 
             ~AVLtree(){
-                // clear();
-            }
-            Node<T> * getRoot()const{
-                return _root;
+                clear();
             }
 
             void clear(){
-                // std::cout << "here" << std::endl;
                 deleteNode(_root);
                 _nodeCount = 0;
             }
@@ -415,14 +422,11 @@ namespace ft{
 
             
             Node<T> *minNode()const{
-                // if (_root == NULL)
-                //     std::cout << "minNode   == "  << std::endl;
                 return leftMost(_root);
             }
 
 
             Node<T> *maxNode()const{
-                // tree_debug();
                 Node<T> * tmp = rightMost(_root);
                 return (tmp);
             }

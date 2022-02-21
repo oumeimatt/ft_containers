@@ -58,7 +58,7 @@ namespace ft {
                     _avltree.insert(*(first++));
             }
             Map (const Map& x) : _avltree(), _compare(x._compare), _alloc(x._alloc){
-                _avltree.assign(x._avltree);
+                _avltree = x._avltree;
 
             }
 
@@ -73,7 +73,7 @@ namespace ft {
             /*-----------------------  ASSIGNEMENT OPERATOR   --------------------------*/
 
             Map& operator= (const Map& x){
-                _avltree.assign(x._avltree);
+                _avltree = x._avltree;
                 _compare  = x._compare;
                 _alloc = x._alloc;
                 return *this;
@@ -144,7 +144,7 @@ namespace ft {
             mapped_type& operator[] (const key_type& k){
                 ft::pair<key_type, mapped_type> p = ft::make_pair(k, mapped_type());
                 _avltree.insert(p);
-                node *tmp = _avltree.findNode(_avltree._root, k);
+                node *tmp = _avltree.search(_avltree._root, k);
                 return (tmp->_value.second);
             }
 
@@ -154,7 +154,7 @@ namespace ft {
 
             ft::pair<iterator,bool> insert (const value_type& val){
                 bool second = _avltree.insert(val);
-                node *tmp = _avltree.findNode(_avltree._root, val.first);
+                node *tmp = _avltree.search(_avltree._root, val.first);
                 iterator first(tmp, &_avltree);
                 ft::pair<iterator,bool> a(first, second);
 
@@ -163,7 +163,7 @@ namespace ft {
             iterator insert (iterator position, const value_type& val){
                 (void)position;
                 _avltree.insert(val);
-                node *tmp = _avltree.findNode(_avltree._root, val.first);
+                node *tmp = _avltree.search(_avltree._root, val.first);
                 iterator first(tmp, &_avltree);
                 return first;
             }
@@ -174,13 +174,15 @@ namespace ft {
             }
             void erase (iterator position){
                 value_type val = *(position);
+                
                 _avltree.remove(val.first);
             }
             size_type erase (const key_type& k){
                 return (_avltree.remove(k));
             }
             void erase (iterator first, iterator last){
-                if (size() >0){
+                // if (size() > 0){
+                    // std::cout << "in " << std::endl;
                     ft::Vector<key_type> tmp;
                     while (first != last){
                         tmp.push_back(first->first);
@@ -190,7 +192,7 @@ namespace ft {
                         _avltree.remove(*it);
                         // std::cout << *it << "  removed " << std::endl;
                     }
-                }
+                // }
 
             }
             void swap (Map& x){
@@ -221,7 +223,7 @@ namespace ft {
             /*----------------------------   OPERATIONS  -------------------------------*/
 
             iterator find (const key_type& k){
-                node *tmp = _avltree.findNode(_avltree._root, k);
+                node *tmp = _avltree.search(_avltree._root, k);
                 if (tmp != NULL)
                     return (iterator(tmp, &_avltree));
                 return end();
@@ -229,7 +231,7 @@ namespace ft {
 
 
             const_iterator find (const key_type& k) const{
-                node *tmp = _avltree.findNode(_avltree._root, k);
+                node *tmp = _avltree.search(_avltree._root, k);
                 if (tmp != NULL)
                     return (const_iterator(tmp, &_avltree));
                 return end();
@@ -237,7 +239,7 @@ namespace ft {
 
 
             size_type count (const key_type& k) const{
-                node *tmp = _avltree.findNode(_avltree._root, k);
+                node *tmp = _avltree.search(_avltree._root, k);
                 if (tmp == NULL)
                     return (0);
                 return (1);
@@ -246,7 +248,7 @@ namespace ft {
             
             iterator lower_bound (const key_type& k){
                 if (_avltree.contains(k) == true){
-                    node *tmp = _avltree.findNode(_avltree._root, k);
+                    node *tmp = _avltree.search(_avltree._root, k);
                     return iterator(tmp, &_avltree);
                 }
                 else 
@@ -256,7 +258,7 @@ namespace ft {
 
             const_iterator lower_bound (const key_type& k) const{
                 if (_avltree.contains(k) == true){
-                    node *tmp = _avltree.findNode(_avltree._root, k);
+                    node *tmp = _avltree.search(_avltree._root, k);
                     return const_iterator(tmp, &_avltree);
                 }
                 else 
@@ -266,7 +268,7 @@ namespace ft {
 
             iterator upper_bound (const key_type& k){
                 if (_avltree.contains(k) == true){
-                    node *tmp = _avltree.findNode(_avltree._root, k);
+                    node *tmp = _avltree.search(_avltree._root, k);
                     iterator it(tmp, &_avltree);
                     return (++it);
                 }
@@ -277,7 +279,7 @@ namespace ft {
 
             const_iterator upper_bound (const key_type& k) const{
                 if (_avltree.contains(k) == true){
-                    node *tmp = _avltree.findNode(_avltree._root, k);
+                    node *tmp = _avltree.search(_avltree._root, k);
                     const_iterator it(tmp, &_avltree);
                     return (++it);
                 }
@@ -312,10 +314,10 @@ namespace ft {
             Alloc _alloc;
 
             iterator bound(const key_type &k){
-                if (_compare(k, _avltree.min().first) == true){
+                if (_compare(k, _avltree.minValue().first) == true){
                     return (iterator(_avltree.minNode(), &_avltree));
                 }
-                else if (_compare(_avltree.max().first, k) == true)
+                else if (_compare(_avltree.maxValue().first, k) == true)
                     return iterator(NULL, &_avltree);
                 else {
                     iterator it = begin();
@@ -330,10 +332,10 @@ namespace ft {
             }
 
             const_iterator const_bound(const key_type &k)const{
-                if (_compare(k, _avltree.min().first) == true){
+                if (_compare(k, _avltree.minValue().first) == true){
                     return begin();
                 }
-                else if (_compare(_avltree.max().first, k) == true)
+                else if (_compare(_avltree.maxValue().first, k) == true)
                     return const_iterator(NULL, &_avltree);
                 else {
                     const_iterator it = begin();

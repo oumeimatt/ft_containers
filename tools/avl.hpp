@@ -13,14 +13,15 @@ namespace ft{
         T _value;
         int _height;
         Node<T> *_left, *_right, *_parent;
-        Node<T> & operator=(const Node<T> & src){
-            _bf = src._bf;
-            _value = src._value;
-            _height = src._height;
-            _left = src._left;
-            _right = src._right;
-            _parent = src._parent;
-        }
+        // Node<T> & operator=(const Node<T> & src){
+        //     _bf = src._bf;
+        //     _value = src._value;
+        //     _height = src._height;
+        //     _left = src._left;
+        //     _right = src._right;
+        //     _parent = src._parent;
+        //     return (*this);
+        // }
         Node(T value) : _value(value){}
     };
 
@@ -71,17 +72,6 @@ namespace ft{
                 else
                     return(contains(node->_right, key));
                 return (true);
-            }
-
-
-
-            T findValue(Node<T> *node, const Key & k){
-                if (k == node->_value.first)
-                    return (node->_value);
-                if (_compare(k, node->_value.first) == true)
-                    return (findValue(node->_left, k));
-                else
-                    return (findValue(node->_right, k));
             }
 
             void update(Node<T> *root){
@@ -217,15 +207,14 @@ namespace ft{
                     Node<T> *root;
                     root = _alloc.allocate(1);
                     _alloc2.construct(&(root->_value), val);
-                    root->_right = NULL;
-                    root->_left = NULL;
-                    root->_parent = parent;
+                    root->_right = root->_left = NULL;
                     root->_bf = root->_height = 0;
+                    root->_parent = parent;
                     return root;
                 }
                 bool cmp = _compare(val.first, node->_value.first);
                 if (cmp == true)
-                    node->_left = insert(node->_left,node, val);
+                    node->_left = insert(node->_left, node, val);
                 else
                     node->_right = insert(node->_right, node, val);
                 //update balance factor and height values
@@ -251,10 +240,12 @@ namespace ft{
 
                         node->_right->_parent = node->_parent;
 
-                        // Balance the node after
-                        // deletion
-                        node->_right = balance(node->_right);
-                        return (node->_right);
+
+                        _alloc2.destroy(&(node->_value));
+                        _alloc2.construct(&(node->_value),(node->_right->_value));
+                        _alloc2.destroy(&(node->_right->_value));
+                        _alloc.deallocate(node->_right, 1);
+                        node->_right = NULL;
                     }
 
                     else if (node->_right == NULL && node->_left != NULL) {
@@ -271,11 +262,13 @@ namespace ft{
   
                         node->_left->_parent = node->_parent;
   
-                        // balance the node
-                        // after deletion
-                        node->_left = balance(node->_left);
-                        return (node->_left);
+                        _alloc2.destroy(&(node->_value));
+                        _alloc2.construct(&(node->_value),(node->_left->_value));
+                        _alloc2.destroy(&(node->_left->_value));
+                        _alloc.deallocate(node->_left, 1);
+                        node->_left = NULL;
                     }
+
                     else if (node->_left == NULL && node->_right == NULL) {
                         if (node->_parent != NULL){
                             if (_compare(node->_parent->_value.first ,node->_value.first) == true) {
@@ -286,12 +279,11 @@ namespace ft{
                             }
 
                             update(node->_parent);
-                            _alloc2.destroy(&(node->_value));
-                            _alloc.deallocate(node, 1);
-
-                            node = NULL;
-                            return NULL;
                         }
+                        _alloc2.destroy(&(node->_value));
+                        _alloc.deallocate(node, 1);
+                        node = NULL;
+                        return NULL;
                     }
                     else {
                             // swap the value of the successor into the node
@@ -313,6 +305,8 @@ namespace ft{
                 return (balance(node));
                 
             }
+
+
             Node<T> *leftMost(Node<T> *root)const{
                 while (root != NULL && root->_left != NULL)
                     root = root->_left;
@@ -321,24 +315,25 @@ namespace ft{
 
 
             Node<T> *rightMost(Node<T> *root)const{
-                while (root != NULL && root->_right != NULL){
+                while (root != NULL && root->_right != NULL)
                     root = root->_right;
-                }
                 return root;
             }
+
+
             void insertData(Node<T> *x){
                 if (x != NULL){
                     insert(x->_value);
                     insertData(x->_left);
                     insertData(x->_right);
-
                 }
             }
 
-            void deleteNode(Node<T> * &node){
+
+            void destroyTree(Node<T> * &node){
                 if (node && node != NULL){
-                    deleteNode(node->_right);
-                    deleteNode(node->_left);
+                    destroyTree(node->_right);
+                    destroyTree(node->_left);
                     _alloc2.destroy(&node->_value);
                     _alloc.deallocate(node, 1);
                 }
@@ -348,18 +343,9 @@ namespace ft{
             AVLtree(): _root(NULL), _nodeCount(0){}
             
             AVLtree(const AVLtree &x):_root(), _nodeCount(x._nodeCount){
-                assign(x);
+                *this = x;
             }
             AVLtree & operator=(const AVLtree& x){
-                // tree_debug();
-                _root = x._root;
-
-                // tree_debug();
-                _nodeCount = x._nodeCount;
-                return *this;
-            }
-
-            AVLtree & assign(const AVLtree &x){
                 clear();
                 Node<T> *tmp = x._root;
                 insertData(tmp);
@@ -367,12 +353,13 @@ namespace ft{
             }
 
 
+
             ~AVLtree(){
                 clear();
             }
 
             void clear(){
-                deleteNode(_root);
+                destroyTree(_root);
                 _nodeCount = 0;
             }
             int height(){
@@ -416,7 +403,7 @@ namespace ft{
             }
 
     
-            T min()const{
+            T minValue()const{
                 return leftMost(_root)->_value;
             }
 
@@ -432,7 +419,7 @@ namespace ft{
             }
 
 
-            T max()const{
+            T maxValue()const{
                 return rightMost(_root)->_value;
             }
 
@@ -440,7 +427,7 @@ namespace ft{
                 return _nodeCount;
             }
 
-            Node<T> *findNode(Node<T> * root, Key key) const{
+            Node<T> *search(Node<T> * root, Key key) const{
                 if (root ==NULL){
                     return NULL;
                 }
@@ -448,9 +435,9 @@ namespace ft{
                     return (root);
                 else{
                     if (_compare(key, root->_value.first) == true)
-                        return(findNode(root->_left, key));
+                        return(search(root->_left, key));
                     else
-                        return(findNode(root->_right, key));
+                        return(search(root->_right, key));
                 }
 
             }

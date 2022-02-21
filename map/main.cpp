@@ -1,7 +1,8 @@
 #include <iostream>
 #include <map>
 #include <unistd.h>
-// #include <vector>
+#include <vector>
+#include <random>
 #include "map.hpp"
 // #include "../tools/avl.hpp"
 // #include "../tools/tools.hpp"
@@ -10,33 +11,22 @@ int  main()
 {
     {
         std::cout << "---------------------- ft::Map ------------------------" <<std::endl;
+        bool cond(true);
+            time_t start, end, diff;
+            /*------------------ std::maps ---------------------*/
+            std::map<int, std::string> m1;
+            ft::Map<int, std::string> ft_m1;
+            for (size_t i = 0; i < 1e6; i++)
+            {
+                m1.insert(std::make_pair(i, "string2"));
+                ft_m1.insert(ft::make_pair(i, "string2"));
+            }
 
-        ft::Map<int, int> aaa;
-        ft::pair<int, int> a(1,1);
-        ft::pair<int, int> b(2,2);
-        ft::pair<int, int> c(3,3);
+            // m1.erase(m1.begin(), m1.end());
+            /*-----------------------------------------------------*/
+            /*------------------ ft::Maps ---------------------*/
+            ft_m1.erase(ft_m1.begin(), ft_m1.end());
 
-
-        aaa.insert(a);
-        aaa.insert(b);
-        aaa.insert(c);
-
-
-        ft::Map<int, int> bbb;
-        ft::pair<int, int> d(4,1);
-        ft::pair<int, int> e(5,2);
-        ft::pair<int, int> f(6,3);
-        bbb.insert(d);
-        bbb.insert(e);
-        bbb.insert(f);
-        
-        aaa.swap(bbb);
-
-        for (ft::Map<int, int>::iterator it = bbb.begin(); it != bbb.end(); it++)
-            std::cout << it->first << std::endl;
-        std::cout << std::endl;
-        for (ft::Map<int, int>::iterator it = aaa.begin(); it != aaa.end(); it++)
-            std::cout << it->first << std::endl;
     }
 
 

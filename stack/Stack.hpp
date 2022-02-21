@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
+#include "../vector/Vector.hpp"
 
 namespace ft {
-    template <class T, class Container = std::vector<T> >
+    template <class T, class Container = ft::Vector<T> >
     class Stack
     {
         public:

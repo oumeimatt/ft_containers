@@ -160,6 +160,8 @@ namespace ft {
 
                 return (a);
             }
+
+            
             iterator insert (iterator position, const value_type& val){
                 (void)position;
                 _avltree.insert(val);
@@ -167,22 +169,28 @@ namespace ft {
                 iterator first(tmp, &_avltree);
                 return first;
             }
+
+
             template <class InputIterator>
             void insert (InputIterator first, InputIterator last){
                 while(first != last)
                     _avltree.insert(*(first++));
             }
+
+
             void erase (iterator position){
                 value_type val = *(position);
                 
                 _avltree.remove(val.first);
             }
+
+
             size_type erase (const key_type& k){
                 return (_avltree.remove(k));
             }
+
+
             void erase (iterator first, iterator last){
-                // if (size() > 0){
-                    // std::cout << "in " << std::endl;
                     ft::Vector<key_type> tmp;
                     while (first != last){
                         tmp.push_back(first->first);
@@ -190,11 +198,10 @@ namespace ft {
                     }
                     for (typename ft::Vector<key_type>::iterator it = tmp.begin(); it != tmp.end(); it++){
                         _avltree.remove(*it);
-                        // std::cout << *it << "  removed " << std::endl;
                     }
-                // }
-
             }
+
+
             void swap (Map& x){
                 std::swap(_avltree._root, x._avltree._root);
                 std::swap(_avltree._nodeCount, x._avltree._nodeCount);

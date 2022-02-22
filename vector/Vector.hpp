@@ -65,7 +65,7 @@ namespace ft {
                 _curr_size = x._curr_size;
                 _capacity = x._curr_size;
                 for (size_type i =0; i < _curr_size; i++)
-                    _alloc.construct(_arr+i, x._arr[i]);
+                    _alloc.construct(_arr + i, x._arr[i]);
                 return *this;
             }
 
@@ -76,7 +76,9 @@ namespace ft {
             ~Vector(){
                for (size_type i = 0; i <_curr_size; i++)
                     _alloc.destroy(_arr + i);
-                _alloc.deallocate(_arr, _capacity);
+                if (_capacity > 0 )
+                    _alloc.deallocate(_arr, _capacity);
+                _arr = NULL;
                 _curr_size = 0;
                 _capacity = 0;
             }
@@ -159,12 +161,14 @@ namespace ft {
                 if (n > max_size())
                     throw std::length_error("length error");
                 if (n > _capacity){
-                    T* tmp = _alloc.allocate(n);
+                    T* tmp = NULL;
+                    tmp = _alloc.allocate(n);
                     for (size_t i = 0; i < _curr_size; i++){
-                        _alloc.construct(tmp+i, _arr[i]);
-                        _alloc.destroy(_arr+i);
+                        _alloc.construct(tmp + i, _arr[i]);
+                        _alloc.destroy(_arr + i);
                     }
-                    _alloc.deallocate(_arr, _capacity);
+                    if (_capacity > 0)
+                        _alloc.deallocate(_arr, _capacity);
                     _arr = tmp;
                     _capacity = n;
                 }
@@ -236,7 +240,6 @@ namespace ft {
                     reserve(n);
                 _curr_size = n;
                 for (size_t i = 0; i < _curr_size; i++){
-                    _alloc.destroy(_arr + i);
                     _alloc.construct(_arr + i, val);
                 }
             }
@@ -251,8 +254,10 @@ namespace ft {
             }
 
             void pop_back(){
-                _curr_size--;
-                _alloc.destroy(_arr + _curr_size);
+                if (_curr_size > 0){
+                    _curr_size--;
+                    _alloc.destroy(_arr + _curr_size);
+                }
             }
 
             iterator insert (iterator position, const value_type& val){
@@ -264,14 +269,14 @@ namespace ft {
                         reserve(2 * _capacity);
                 }
                 for (long i = _curr_size; i > distance; i--)
-                    _arr[i] = _arr[i - 1];
-                _arr[distance] = val;
+                    _alloc.construct(_arr + i, _arr[i - 1]);
+                _alloc.construct(_arr + distance, val);
                 _curr_size++;
-                return begin() + distance;
+                return (begin() + distance);
             }
 
             void insert (iterator position, size_type n, const value_type& val){
-                size_type newCap;
+                size_type newCap = 0;
                 long pos = position - begin();
                 if (_curr_size + n > _capacity){
                     newCap = 2 * _capacity;
@@ -281,9 +286,9 @@ namespace ft {
                 }
                 _curr_size+=n;
                 for (unsigned long i = _curr_size - 1; i > pos + n - 1;i--)
-                    _arr[i] = _arr[i - n];
+                    _alloc.construct(_arr + i, _arr[i - n]);
                 for (long i = pos + n -1; i > pos - 1; i--)
-                    _arr[i] = val;
+                    _alloc.construct(_arr + i, val);
             }
 
             template <class InputIterator>
@@ -292,12 +297,14 @@ namespace ft {
                 size_type pos = position - begin();
                 if (_curr_size == 0){
                     _arr = _alloc.allocate(diff);
-                    for (size_type i = 0;i < diff; i++)
-                        _arr[i] = *(first + i);
+                    for (size_type i = 0; i < diff; i++){
+                        _alloc.construct(_arr + i , *(first + i));
+                    }
                     _capacity = _curr_size = diff;
                 }
                 else {
-                    T *tmp = _alloc.allocate(diff);
+                    T *tmp = NULL;
+                    tmp =  _alloc.allocate(diff);
                     for (size_type i = 0; i < diff; i++){
                         _alloc.construct(tmp + i, *(first + i));
                     }
@@ -309,14 +316,15 @@ namespace ft {
                     }
                     _curr_size += diff;
                     for (size_type i = _curr_size - 1; i > pos + diff - 1; i--)
-                        _arr[i] = _arr[i - diff];
+                        _alloc.construct(_arr + i, _arr[i - diff]);
                     int j = 0;
                     for (int i = pos + diff - 1; i > (int)(pos -1); i--){
-                        _arr[i] = *(tmp + diff - 1 - j);
+                        _alloc.construct(_arr + i , *(tmp + diff - 1 - j));
                         _alloc.destroy(tmp + diff - 1 - j);
                         j++;
                     }
-                    _alloc.deallocate(tmp, _capacity);
+                    if (diff > 0)
+                        _alloc.deallocate(tmp, diff);
                 }
             }
 

@@ -46,8 +46,8 @@ namespace ft {
                 return *p;
             }
 
-            pointer operator->()const{
-                return (&(*p));
+            pointer operator->()const{ 
+                return (p);
             }
 
             random_access_iterator & operator++(){

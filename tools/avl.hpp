@@ -13,23 +13,16 @@ namespace ft{
         T _value;
         int _height;
         Node<T> *_left, *_right, *_parent;
-        // Node<T> & operator=(const Node<T> & src){
-        //     _bf = src._bf;
-        //     _value = src._value;
-        //     _height = src._height;
-        //     _left = src._left;
-        //     _right = src._right;
-        //     _parent = src._parent;
-        //     return (*this);
-        // }
         Node(T value) : _value(value){}
     };
+
 
 
     template <typename T>
     bool operator!=(const Node<T> &lhs, const Node<T> &rhs){
         return (!(lhs==rhs));
     }
+
 
 
     template <typename T>
@@ -60,7 +53,7 @@ namespace ft{
             size_type _nodeCount;
             Compare _compare;
 
-
+        private:
 
             bool contains(Node<T> *node, Key key) const{
                 if (node == NULL)
@@ -443,33 +436,34 @@ namespace ft{
             }
 
 
-            void	tree_debug(const std::string &prefix,
-                    const Node<T>* node, bool isLeft){
-                if(node != NULL)
-                {
-                    std::cout << prefix;
-                    std::cout << (isLeft?"L──" : "R──");
-                    std::cout << node->_value.first;
-                    // if (node->_parent != NULL)
-                    //     std::cout << ":parent:" << node->_parent->_value.first;
-                    std::cout << ":"  << std::endl;
+            // void	tree_debug(const std::string &prefix,
+            //         const Node<T>* node, bool isLeft){
+            //     if(node != NULL)
+            //     {
+            //         std::cout << prefix;
+            //         std::cout << (isLeft?"L──" : "R──");
+            //         std::cout << node->_value.first;
+            //         // if (node->_parent != NULL)
+            //         //     std::cout << ":parent:" << node->_parent->_value.first;
+            //         std::cout << ":"  << std::endl;
 
-                    tree_debug(prefix+(isLeft?"│   "
-                                : "    "),
-                            node->_left, true);
-                    tree_debug(prefix+(isLeft?"│   "
-                                : "    "),
-                            node->_right, false);
-                }
-            }
+            //         tree_debug(prefix+(isLeft?"│   "
+            //                     : "    "),
+            //                 node->_left, true);
+            //         tree_debug(prefix+(isLeft?"│   "
+            //                     : "    "),
+            //                 node->_right, false);
+            //     }
+            // }
             
 
             
 
-            void	tree_debug(void){
-                std::cout << std::endl;
-                tree_debug("$", _root, false);
-            }
+            // void	tree_debug(void){
+            //     std::cout << std::endl;
+            //     tree_debug("$", _root, false);
+            // }
+
             alloc_value get_allocator()const{
                 return _alloc2;
             }

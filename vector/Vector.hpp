@@ -76,8 +76,7 @@ namespace ft {
             ~Vector(){
                for (size_type i = 0; i <_curr_size; i++)
                     _alloc.destroy(_arr + i);
-                if (_capacity > 0 )
-                    _alloc.deallocate(_arr, _capacity);
+                _alloc.deallocate(_arr, _capacity);
                 _arr = NULL;
                 _curr_size = 0;
                 _capacity = 0;

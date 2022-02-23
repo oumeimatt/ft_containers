@@ -7,6 +7,9 @@
 
 
 namespace ft{
+
+    /*------------------------- NODE STRUCT ----------------------------------*/
+
     template<class T>
     struct Node{
         int _bf;
@@ -35,6 +38,10 @@ namespace ft{
         return (false);
     }
 
+    /*-------------------------------------------------------------------------*/
+
+
+    /*-------------------------    AVLTREEE CLASS   ---------------------------*/
 
     template<class T, class Compare = std::less<typename T::first_type>, class Alloc = std::allocator<T> >
     class AVLtree
@@ -46,12 +53,124 @@ namespace ft{
             typedef Alloc alloc_value;
             typedef typename Alloc::template rebind<Node<T> >::other alloc_node;
 
-        public:
+
             Node<T> *_root;
             alloc_node _alloc;
             alloc_value _alloc2;
             size_type _nodeCount;
             Compare _compare;
+
+
+
+            AVLtree(): _root(NULL), _nodeCount(0){}
+            
+
+            AVLtree(const AVLtree &x):_root(), _nodeCount(x._nodeCount){
+                *this = x;
+            }
+
+
+            AVLtree & operator=(const AVLtree& x){
+                clear();
+                Node<T> *tmp = x._root;
+                insertData(tmp);
+                return *this;
+            }
+
+
+
+            ~AVLtree(){
+                clear();
+            }
+
+
+            void clear(){
+                destroyTree(_root);
+                _nodeCount = 0;
+            }
+
+
+            int height(){
+                if (_root == NULL)
+                    return (0);
+                return (_root->_height);
+            }
+
+
+            int size(){
+                return (_nodeCount);
+            }
+
+
+            bool isEmpty(){
+                return (size() == 0);
+            }
+
+
+            bool contains(Key k) const{
+                return(contains(_root, k));
+            }
+
+
+            bool insert(T val){
+                if (!contains(_root, val.first)) {
+                    _root = insert(_root, NULL, val);
+                    _nodeCount++;
+                    return true;
+                }
+                return false;
+            }
+
+
+            bool remove(Key k){
+                if (contains(_root, k) ){
+                    _root = remove(_root, k);
+                    _nodeCount--;
+                    return true;
+                }
+                return false;
+            }
+
+    
+            T minValue()const{
+                return leftMost(_root)->_value;
+            }
+
+            
+            Node<T> *minNode()const{
+                return leftMost(_root);
+            }
+
+
+            T maxValue()const{
+                return rightMost(_root)->_value;
+            }
+
+
+            Node<T> *maxNode()const{
+                Node<T> * tmp = rightMost(_root);
+                return (tmp);
+            }
+
+
+            Node<T> *search(Node<T> * root, Key key) const{
+                if (root ==NULL){
+                    return NULL;
+                }
+                if (root->_value.first == key)
+                    return (root);
+                else{
+                    if (_compare(key, root->_value.first) == true)
+                        return(search(root->_left, key));
+                    else
+                        return(search(root->_right, key));
+                }
+
+            }
+
+            alloc_value get_allocator()const{
+                return _alloc2;
+            }
 
         private:
 
@@ -67,9 +186,9 @@ namespace ft{
                 return (true);
             }
 
+
             void update(Node<T> *root){
                 if (root != NULL) {
-                   
                     int leftNodeHeight = (root->_left == NULL) ? -1 : root->_left->_height;
                     int rightNodeHeight = (root->_right == NULL) ? -1 : root->_right->_height;
                     root->_height = 1 + std::max(leftNodeHeight, rightNodeHeight);
@@ -97,7 +216,6 @@ namespace ft{
                     else
                         return rightLeftCase(node);
                 }
-
                 // node either has a balance factor of 0 , 1 or -1 which is fine
                 return node;
             }
@@ -216,6 +334,7 @@ namespace ft{
                 return (balance(node));
             }
 
+
             Node<T> *remove(Node <T> * node, Key k){
                 bool cmp = _compare(k, node->_value.first);
                 if (k == node->_value.first){
@@ -230,9 +349,7 @@ namespace ft{
                             // of the root's parent
                             update(node->_parent);
                         }
-
                         node->_right->_parent = node->_parent;
-
 
                         _alloc2.destroy(&(node->_value));
                         _alloc2.construct(&(node->_value),(node->_right->_value));
@@ -332,141 +449,8 @@ namespace ft{
                 }
                 node = NULL;
             }
-        public:
-            AVLtree(): _root(NULL), _nodeCount(0){}
-            
-            AVLtree(const AVLtree &x):_root(), _nodeCount(x._nodeCount){
-                *this = x;
-            }
-            AVLtree & operator=(const AVLtree& x){
-                clear();
-                Node<T> *tmp = x._root;
-                insertData(tmp);
-                return *this;
-            }
-
-
-
-            ~AVLtree(){
-                clear();
-            }
-
-            void clear(){
-                destroyTree(_root);
-                _nodeCount = 0;
-            }
-            int height(){
-                if (_root == NULL)
-                    return (0);
-                return (_root->_height);
-            }
-
-
-            int size(){
-                return (_nodeCount);
-            }
-
-
-            bool isEmpty(){
-                return (size() == 0);
-            }
-
-
-            bool contains(Key k) const{
-                return(contains(_root, k));
-            }
-
-
-            bool insert(T val){
-                if (!contains(_root, val.first)) {
-                    _root = insert(_root, NULL, val);
-                    _nodeCount++;
-                    return true;
-                }
-                return false;
-            }
-
-            bool remove(Key k){
-                if (contains(_root, k) ){
-                    _root = remove(_root, k);
-                    _nodeCount--;
-                    return true;
-                }
-                return false;
-            }
-
-    
-            T minValue()const{
-                return leftMost(_root)->_value;
-            }
-
-            
-            Node<T> *minNode()const{
-                return leftMost(_root);
-            }
-
-
-            Node<T> *maxNode()const{
-                Node<T> * tmp = rightMost(_root);
-                return (tmp);
-            }
-
-
-            T maxValue()const{
-                return rightMost(_root)->_value;
-            }
-
-            size_type getNodeCount()const{
-                return _nodeCount;
-            }
-
-            Node<T> *search(Node<T> * root, Key key) const{
-                if (root ==NULL){
-                    return NULL;
-                }
-                if (root->_value.first == key)
-                    return (root);
-                else{
-                    if (_compare(key, root->_value.first) == true)
-                        return(search(root->_left, key));
-                    else
-                        return(search(root->_right, key));
-                }
-
-            }
-
-
-            // void	tree_debug(const std::string &prefix,
-            //         const Node<T>* node, bool isLeft){
-            //     if(node != NULL)
-            //     {
-            //         std::cout << prefix;
-            //         std::cout << (isLeft?"L──" : "R──");
-            //         std::cout << node->_value.first;
-            //         // if (node->_parent != NULL)
-            //         //     std::cout << ":parent:" << node->_parent->_value.first;
-            //         std::cout << ":"  << std::endl;
-
-            //         tree_debug(prefix+(isLeft?"│   "
-            //                     : "    "),
-            //                 node->_left, true);
-            //         tree_debug(prefix+(isLeft?"│   "
-            //                     : "    "),
-            //                 node->_right, false);
-            //     }
-            // }
-            
-
-            
-
-            // void	tree_debug(void){
-            //     std::cout << std::endl;
-            //     tree_debug("$", _root, false);
-            // }
-
-            alloc_value get_allocator()const{
-                return _alloc2;
-            }
 
     };
+
+    /*-------------------------------------------------------------------------*/
 }

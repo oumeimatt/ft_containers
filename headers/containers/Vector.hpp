@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 #include <stdexcept>
-#include "random_access_iterator.hpp"
+#include "../iterators/reverse_iterator.hpp"
 #include "../tools/tools.hpp"
-#include "../tools/reverse_itererator.hpp"
+#include "../iterators/random_access_iterator.hpp"
 
 namespace ft {
 

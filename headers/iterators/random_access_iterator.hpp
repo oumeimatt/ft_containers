@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <iterator>
-using namespace std;
 
 namespace ft {
     template <typename T>

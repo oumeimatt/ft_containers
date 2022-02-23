@@ -4,9 +4,9 @@
 #include <string>
 #include "../tools/tools.hpp"
 #include "../tools/avl.hpp"
-#include "bidirectional_iterator.hpp"
-#include "../tools/reverse_itererator.hpp"
-#include "../vector/Vector.hpp"
+#include "../iterators/bidirectional_iterator.hpp"
+#include "../iterators/reverse_iterator.hpp"
+#include "Vector.hpp"
 
 
 namespace ft {
